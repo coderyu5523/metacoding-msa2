@@ -29,7 +29,7 @@ public class OrderService {
         Order order = Order.create(userId, productId, quantity);
 
         // 4. 배달 생성
-        DeliveryRequest.SaveDTO deliveryRequest = new DeliveryRequest.SaveDTO(order.getId(), "Default Address");
+        DeliveryRequest.SaveDTO deliveryRequest = new DeliveryRequest.SaveDTO(order.getId(), "ADRESS 4");
         deliveryClient.saveDelivery(deliveryRequest);
         
         // 5. 주문 완료

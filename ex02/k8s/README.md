@@ -4,7 +4,6 @@
 ```bash
 minikube start
 ```
-
 #### 2 이미지 빌드
 
 ```bash
@@ -26,12 +25,12 @@ kubectl create namespace metacoding
 #### 4 Kubernetes 리소스 배포
 
 ```bash
-kubectl apply -f k8s/db/
-kubectl apply -f k8s/gateway/
-kubectl apply -f k8s/order/
-kubectl apply -f k8s/product/
-kubectl apply -f k8s/user/
-kubectl apply -f k8s/delivery/
+kubectl apply -f k8s/db
+kubectl apply -f k8s/gateway
+kubectl apply -f k8s/order
+kubectl apply -f k8s/product
+kubectl apply -f k8s/user
+kubectl apply -f k8s/delivery
 ```
 
 ### 5. 서비스 접근

@@ -36,7 +36,10 @@ public class UserService {
             .orElseThrow(() -> new RuntimeException("유저네임을 찾을 수 없습니다."));
         user.passwordCheck(password);
         String token = jwtUtil.create(user.getId(), user.getUsername());
-        return new LoginResult(token);
+        return new LoginResult(JwtUtil.TOKEN_PREFIX+token);
     }
 }
+
+
+
 
