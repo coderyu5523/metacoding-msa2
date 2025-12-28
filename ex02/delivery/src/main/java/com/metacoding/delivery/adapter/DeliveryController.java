@@ -34,7 +34,7 @@ public class DeliveryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getDelivery(@PathVariable int id) {
-        DeliveryResult result = deliveryService.findDeliveryById(id);
+        DeliveryResult result = deliveryService.findById(id);
         DeliveryResponse.DTO response = new DeliveryResponse.DTO(
             result.id(),
             result.orderId(),

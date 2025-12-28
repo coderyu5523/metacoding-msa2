@@ -15,15 +15,14 @@ public class DeliveryService {
     @Transactional
     public DeliveryResult createDelivery(DeliveryCommand command) {
         Delivery delivery = Delivery.create(command.orderId(), command.address());
+        delivery.complete();
         Delivery savedDelivery = deliveryRepository.save(delivery);
-        savedDelivery.complete();
-        Delivery updatedDelivery = deliveryRepository.save(savedDelivery);
-        return DeliveryResult.from(updatedDelivery);
+        return DeliveryResult.from(savedDelivery);
     }
 
-    public DeliveryResult findDeliveryById(int id) {
+    public DeliveryResult findById(int id) {
         Delivery delivery = deliveryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("배달 정보를 조회할 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("배달 정보를 조회할 수 없습니다."));
         return DeliveryResult.from(delivery);
     }
 }

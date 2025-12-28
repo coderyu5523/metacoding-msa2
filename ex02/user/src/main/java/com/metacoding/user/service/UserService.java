@@ -17,9 +17,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-    public UserResult findUserById(int id) {
+    public UserResult findById(int id) {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
         return UserResult.from(user);
     }
 

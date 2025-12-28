@@ -17,8 +17,7 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     public ResponseEntity<?> getProduct(@PathVariable("productId") int productId, @RequestParam int quantity) {
-        ProductCommand command = new ProductCommand(productId, quantity);
-        ProductResult result = productService.getProduct(command);
+        ProductResult result = productService.findById(productId, quantity);
         ProductResponse.DTO response = new ProductResponse.DTO(
             result.id(),
             result.productName(),
@@ -46,15 +45,7 @@ public class ProductController {
 
     @PostMapping("/{productId}/decrease")
     public ResponseEntity<?> decreaseQuantity(@PathVariable("productId") int productId, @RequestParam int quantity) {
-        ProductCommand command = new ProductCommand(productId, quantity);
-        productService.decreaseQuantity(command);
-        return Resp.ok(null);
-    }
-
-    @PostMapping("/{productId}/increase")
-    public ResponseEntity<?> increaseQuantity(@PathVariable("productId") int productId, @RequestParam int quantity) {
-        ProductCommand command = new ProductCommand(productId, quantity);
-        productService.increaseQuantity(command);
+        productService.decreaseQuantity(productId, quantity);
         return Resp.ok(null);
     }
 }

@@ -15,37 +15,25 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public ProductResult getProduct(ProductCommand command) {
-        Product product = productRepository.findById(command.productId())
-            .orElseThrow(() -> new RuntimeException("등록된 상품이 없습니다."));
-        
-        product.quantityCheck(command.quantity()); // 재고 확인
-        
+    public ProductResult findById(int id, int quantity) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
+        product.checkQuantity(quantity);
         return ProductResult.from(product);
     }
 
     public List<ProductResult> findAll() {
         return productRepository.findAll().stream()
-            .map(ProductResult::from)
-            .collect(Collectors.toList());
+                .map(ProductResult::from)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public void decreaseQuantity(ProductCommand command) {
-        Product product = productRepository.findById(command.productId())
-            .orElseThrow(() -> new RuntimeException("등록된 상품이 없습니다."));
-        product.decreaseQuantity(command.quantity());
-        product.updateStatus("PENDING");
-        Product savedProduct = productRepository.save(product);
-        savedProduct.updateStatus("SUCCESS");
-        productRepository.save(savedProduct);
-    }
-
-    @Transactional
-    public void increaseQuantity(ProductCommand command) {
-        Product product = productRepository.findById(command.productId())
-            .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
-        product.increaseQuantity(command.quantity());
+    public void decreaseQuantity(int productId, int quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
+        product.decreaseQuantity(quantity);
+        product.complete();
         productRepository.save(product);
     }
 }

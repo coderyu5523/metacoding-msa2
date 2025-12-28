@@ -2,7 +2,11 @@ CREATE TABLE user_tb (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50),
   email VARCHAR(50),
-  password VARCHAR(50)
+  password VARCHAR(50),
+  role VARCHAR(50),
+  status VARCHAR(50),
+  created_at DATETIME,
+  updated_at DATETIME
 );
 
 
@@ -11,7 +15,9 @@ CREATE TABLE product_tb (
   product_name VARCHAR(50),
   quantity INT,
   price BIGINT,
-  status VARCHAR(50)
+  status VARCHAR(50),
+  created_at DATETIME,
+  updated_at DATETIME
 );
 
 CREATE TABLE order_tb (
@@ -33,20 +39,19 @@ CREATE TABLE delivery_tb (
   updated_at DATETIME
 );
 
-INSERT INTO user_tb (username, email, password) VALUES ('ssar','ssar@metacoding.com','1234');
-INSERT INTO user_tb (username, email, password) VALUES ('cos','cos@metacoding.com','1234');
-INSERT INTO user_tb (username, email, password) VALUES ('love','love@metacoding.com','1234');
+INSERT INTO user_tb (username, email, password, role, status, created_at, updated_at) VALUES ('ssar','ssar@metacoding.com','1234','USER','COMPLETED',now(),now());
+INSERT INTO user_tb (username, email, password, role, status, created_at, updated_at) VALUES ('cos','cos@metacoding.com','1234','USER','COMPLETED',now(),now());
+INSERT INTO user_tb (username, email, password, role, status, created_at, updated_at) VALUES ('love','love@metacoding.com','1234','USER','COMPLETED',now(),now());
 
+INSERT INTO product_tb (product_name, quantity, price, status, created_at, updated_at) VALUES ('MacBook Pro', 10, 2500000, 'COMPLETED', now(), now());
+INSERT INTO product_tb (product_name, quantity, price, status, created_at, updated_at) VALUES ('iPhone 15', 3, 1300000, 'COMPLETED', now(), now());
+INSERT INTO product_tb (product_name, quantity, price, status, created_at, updated_at) VALUES ('AirPods', 10, 300000, 'COMPLETED', now(), now());
 
-INSERT INTO product_tb (product_name, quantity, price, status) VALUES ('MacBook Pro', 10, 2500000, 'NONE');
-INSERT INTO product_tb (product_name, quantity, price, status) VALUES ('iPhone 15', 3, 1300000, 'NONE');
-INSERT INTO product_tb (product_name, quantity, price, status) VALUES ('AirPods', 10, 300000, 'NONE');
+INSERT INTO order_tb (user_id, product_id, quantity, status, created_at, updated_at) VALUES (1, 1, 1, 'COMPLETED', now(), now()); 
+INSERT INTO order_tb (user_id, product_id, quantity, status, created_at, updated_at) VALUES (2, 3, 1, 'CANCELLED', now(), now()); 
+INSERT INTO order_tb (user_id, product_id, quantity, status, created_at, updated_at) VALUES (3, 2, 2, 'PENDING', now(), now());
 
-INSERT INTO order_tb (user_id, product_id, quantity, status, created_at, updated_at) VALUES (1, 1, 1, 'success', now(), now()); 
-INSERT INTO order_tb (user_id, product_id, quantity, status, created_at, updated_at) VALUES (2, 3, 1, 'failed', now(), now()); 
-INSERT INTO order_tb (user_id, product_id, quantity, status, created_at, updated_at) VALUES (3, 2, 2, 'pending', now(), now());
-
-INSERT INTO delivery_tb (order_id, address, status, created_at, updated_at) VALUES (1, '서울시 강남구 테헤란로 123', 'PENDING', NOW(), NOW());
-INSERT INTO delivery_tb (order_id, address, status, created_at, updated_at) VALUES (2, '서울시 서초구 서초대로 456', 'PENDING', NOW(), NOW());
-INSERT INTO delivery_tb (order_id, address, status, created_at, updated_at) VALUES (3, '서울시 송파구 올림픽로 789', 'IN_TRANSIT', NOW(), NOW());
+INSERT INTO delivery_tb (order_id, address, status, created_at, updated_at) VALUES (1, 'ADRESS 1', 'COMPLETED', NOW(), NOW());
+INSERT INTO delivery_tb (order_id, address, status, created_at, updated_at) VALUES (2, 'ADRESS 2', 'CANCELLED', NOW(), NOW());
+INSERT INTO delivery_tb (order_id, address, status, created_at, updated_at) VALUES (3, 'ADRESS 3', 'COMPLETED', NOW(), NOW());
 

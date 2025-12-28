@@ -23,7 +23,7 @@ public class UserController {
 
     @GetMapping("/api/users/{userId}")
     public ResponseEntity<?> getUser(@PathVariable("userId") int userId) {
-        UserResult result = userService.findUserById(userId);
+        UserResult result = userService.findById(userId);
         UserResponse.DTO response = new UserResponse.DTO(
             result.id(),
             result.username(),

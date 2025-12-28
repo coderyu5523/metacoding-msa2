@@ -31,13 +31,8 @@ public class Delivery {
         return new Delivery(orderId, address, "PENDING");
     }
 
-    public void updateStatus(String status) {
-        this.status = status;
-        this.updatedAt = LocalDateTime.now();
-    }
-
     public void complete() {
-        this.status = "SUCCESS";
+        this.status = "COMPLETED";
         this.updatedAt = LocalDateTime.now();
     }
 

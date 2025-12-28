@@ -1,5 +1,6 @@
 package com.metacoding.product.domain;
 
+import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +16,8 @@ public class Product {
     private int quantity;
     private Long price;
     private String status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @Builder
     private Product(String productName, int quantity, Long price, String status) {
@@ -22,23 +25,34 @@ public class Product {
         this.quantity = quantity;
         this.price = price;
         this.status = status;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public static Product create(String productName, int quantity, Long price) {
+        return new Product(productName, quantity, price, "PENDING");
+    }
+    
+    public void complete() {
+        this.status = "COMPLETED";
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void cancel() {
+        this.status = "CANCELLED";
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void decreaseQuantity(int quantity) {
+        if (this.quantity < quantity) {
+            throw new RuntimeException("제품의 수량이 부족합니다.");
+        }
         this.quantity -= quantity;
     }
 
-    public void increaseQuantity(int quantity) {
-        this.quantity += quantity;
-    }
-
-    public void updateStatus(String status) {
-        this.status = status;
-    }
-
-    public void quantityCheck(int quantity) {
+    public void checkQuantity(int quantity) {
         if (this.quantity < quantity) {
-            throw new RuntimeException("상품 재고가 부족합니다.");
+            throw new RuntimeException("제품의 수량이 부족합니다.");
         }
     }
 }

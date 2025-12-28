@@ -11,9 +11,6 @@ public interface ProductClient {
         
     @PostMapping("/api/products/{productId}/decrease")
     void decreaseQuantity(@PathVariable("productId") int productId, @RequestParam("quantity") int quantity);
-    
-    @PostMapping("/api/products/{productId}/increase")
-    void increaseQuantity(@PathVariable("productId") int productId, @RequestParam("quantity") int quantity);
 }
 
 

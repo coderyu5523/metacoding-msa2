@@ -33,16 +33,11 @@ public class Order {
         return new Order(userId, productId, quantity, "PENDING");
     }
 
-    public void updateStatus(String status) {
-        this.status = status;
-        this.updatedAt = LocalDateTime.now();
-    }
-
     public void complete() {
-        this.status = "SUCCESS";
+        this.status = "COMPLETED";
         this.updatedAt = LocalDateTime.now();
     }
-
+    
     public void cancel() {
         this.status = "CANCELLED";
         this.updatedAt = LocalDateTime.now();
