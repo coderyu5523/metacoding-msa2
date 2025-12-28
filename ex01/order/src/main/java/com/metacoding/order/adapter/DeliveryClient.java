@@ -1,6 +1,6 @@
-package com.metacoding.order.clients;
+package com.metacoding.order.adapter;
 
-import com.metacoding.order.clients.dto.*;
+import com.metacoding.order.adapter.dto.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

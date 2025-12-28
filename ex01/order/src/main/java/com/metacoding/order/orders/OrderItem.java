@@ -1,4 +1,4 @@
-package com.metacoding.delivery.deliveries;
+package com.metacoding.order.orders;
 
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
@@ -7,28 +7,30 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name = "delivery_tb")
-public class Delivery {
+@Table(name = "order_item_tb")
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int orderId;
-    private String address;
+    private int productId;
+    private int quantity;
+    private Long price;
     private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @Builder
-    private Delivery(int orderId, String address, String status) {
+    private OrderItem(int orderId, int productId, int quantity, Long price, String status) {
         this.orderId = orderId;
-        this.address = address;
+        this.productId = productId;
+        this.quantity = quantity;
+        this.price = price;
         this.status = status;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
     }
 
-    public static Delivery create(int orderId, String address) {
-        return new Delivery(orderId, address, "PENDING");
+    public static OrderItem create(int orderId, int productId, int quantity, Long price) {
+        return new OrderItem(orderId, productId, quantity, price, "PENDING");
     }
 
     public void complete() {
@@ -41,3 +43,4 @@ public class Delivery {
         this.updatedAt = LocalDateTime.now();
     }
 }
+

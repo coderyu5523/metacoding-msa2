@@ -1,7 +1,7 @@
 package com.metacoding.order.orders;
 
-import com.metacoding.order.clients.*;
-import com.metacoding.order.clients.dto.*;
+import com.metacoding.order.adapter.*;
+import com.metacoding.order.adapter.dto.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,29 +16,29 @@ public class OrderService {
 
     @Transactional
     public OrderResponse.DTO saveOrder(int userId, OrderRequest.SaveDTO requestDTO) {
-        // 1. 주문 insert
-        Order order = Order.create(
-                userId,
-                requestDTO.productId(),
-                requestDTO.quantity()
-        );
-        Order savedOrder = orderRepository.save(order);
 
-        // 2. 상품 재고 확인 및 감소 (ProductService에서 재고 확인 포함)
+        // 1. 상품 재고 확인 및 감소 
         productClient.getProduct(requestDTO.productId(), requestDTO.quantity());
 
-        // 3. 상품 재고 감소 (상태가 PENDING으로 변경됨)
+        // 2. 상품 재고 감소
         productClient.decreaseQuantity(requestDTO.productId(), requestDTO.quantity());
                 
+        // 3. 주문 insert
+        Order order = Order.create(
+            userId,
+            requestDTO.productId(),
+            requestDTO.quantity()
+        );
+
         // 4. 배달 생성
-        DeliveryRequest.SaveDTO deliveryRequest = new DeliveryRequest.SaveDTO(savedOrder.getId(), "Default Address");
+        DeliveryRequest.SaveDTO deliveryRequest = new DeliveryRequest.SaveDTO(order.getId(), "Default Address");
         deliveryClient.saveDelivery(deliveryRequest);
+        
+        // 5. 주문 완료
+        order.complete();
+        Order savedOrder = orderRepository.save(order);
 
-        // 5. 주문 상태 변경
-        savedOrder.updateStatus("success");
-        Order completedOrder = orderRepository.save(savedOrder);
-
-        return new OrderResponse.DTO(completedOrder);
+        return new OrderResponse.DTO(savedOrder);
     }
 
     public OrderResponse.DTO findById(int id) {

@@ -13,10 +13,9 @@ public class DeliveryService {
     @Transactional
     public DeliveryResponse.DTO saveDelivery(int orderId, String address) {
         Delivery delivery = Delivery.create(orderId, address);
+        delivery.complete();
         Delivery savedDelivery = deliveryRepository.save(delivery);
-        savedDelivery.updateStatus("success");
-        Delivery updatedDelivery = deliveryRepository.save(savedDelivery);
-        return new DeliveryResponse.DTO(updatedDelivery);
+        return new DeliveryResponse.DTO(savedDelivery);
     }
 
     public DeliveryResponse.DTO findById(int id) {

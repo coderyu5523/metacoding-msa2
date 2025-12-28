@@ -16,10 +16,7 @@ public class ProductService {
     public ProductResponse.DTO findById(int id, int quantity) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
-        // 재고 확인
-        if (product.getQuantity() < quantity) {
-            throw new RuntimeException("상품 재고가 부족합니다.");
-        }
+        product.checkQuantity(quantity);
         return new ProductResponse.DTO(product);
     }
 
@@ -34,9 +31,7 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
         product.decreaseQuantity(quantity);
-        product.updateStatus("PENDING");
-        Product savedProduct = productRepository.save(product);
-        savedProduct.updateStatus("SUCCESS");
-        productRepository.save(savedProduct);
+        product.complete();
+        productRepository.save(product);
     }
 }

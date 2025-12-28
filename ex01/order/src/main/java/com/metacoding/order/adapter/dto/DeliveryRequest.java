@@ -1,4 +1,4 @@
-package com.metacoding.order.clients.dto;
+package com.metacoding.order.adapter.dto;
 
 public class DeliveryRequest {
     public record SaveDTO(
