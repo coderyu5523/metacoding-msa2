@@ -43,12 +43,6 @@ public class JwtUtil {
         return Integer.parseInt(decodedJWT.getSubject());
     }
 
-    // 토큰에서 사용자명 추출
-    public String getUsername(String token) {
-        DecodedJWT decodedJWT = verify(token);
-        return decodedJWT.getClaim("username").asString();
-    }
-
     // 토큰 유효성 검증
     public boolean validateToken(String token) {
         try {

@@ -27,15 +27,6 @@ public class JwtProvider {
         return null;
     }
 
-    // 토큰에서 사용자명 추출
-    public String getUsername(HttpServletRequest request) {
-        String token = resolveToken(request);
-        if (token != null && jwtUtil.validateToken(token)) {
-            return jwtUtil.getUsername(token);
-        }
-        return null;
-    }
-
     // 토큰 유효성 검증
     public boolean validateToken(String token) {
         return jwtUtil.validateToken(token);
