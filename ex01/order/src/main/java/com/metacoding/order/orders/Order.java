@@ -42,6 +42,24 @@ public class Order {
         this.status = "CANCELLED";
         this.updatedAt = LocalDateTime.now();
     }
+
+    public void validateUserId() {
+        if (userId <= 0) {
+            throw new RuntimeException("유효한 사용자 ID가 필요합니다.");
+        }
+    }
+
+    public void validateProductId() {
+        if (productId <= 0) {
+            throw new RuntimeException("유효한 상품 ID가 필요합니다.");
+        }
+    }
+
+    public void validateQuantity() {
+        if (quantity <= 0) {
+            throw new RuntimeException("주문 수량은 1개 이상이어야 합니다.");
+        }
+    }
 }
 
 
