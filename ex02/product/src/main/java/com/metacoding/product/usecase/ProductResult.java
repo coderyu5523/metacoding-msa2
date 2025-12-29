@@ -8,7 +8,6 @@ public record ProductResult(
     String productName,
     int quantity,
     Long price,
-    String status,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
@@ -18,7 +17,6 @@ public record ProductResult(
             product.getProductName(),
             product.getQuantity(),
             product.getPrice(),
-            product.getStatus(),
             product.getCreatedAt(),
             product.getUpdatedAt()
         );

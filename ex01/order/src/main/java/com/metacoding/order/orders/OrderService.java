@@ -17,7 +17,7 @@ public class OrderService {
     @Transactional
     public OrderResponse.DTO saveOrder(int userId, OrderRequest.SaveDTO requestDTO) {
 
-        // 1. 상품 재고 확인 및 감소 
+        // 1. 상품 재고 확인
         productClient.getProduct(requestDTO.productId(), requestDTO.quantity());
 
         // 2. 상품 재고 감소

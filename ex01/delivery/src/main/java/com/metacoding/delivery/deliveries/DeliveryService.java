@@ -13,7 +13,6 @@ public class DeliveryService {
     @Transactional
     public DeliveryResponse.DTO saveDelivery(int orderId, String address) {
         Delivery delivery = Delivery.create(orderId, address);
-        delivery.complete();
         Delivery savedDelivery = deliveryRepository.save(delivery);
         return new DeliveryResponse.DTO(savedDelivery);
     }

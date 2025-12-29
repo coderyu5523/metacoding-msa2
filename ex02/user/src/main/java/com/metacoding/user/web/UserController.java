@@ -1,10 +1,7 @@
 package com.metacoding.user.web;
 
-import com.metacoding.user.usecase.UserService;
-import com.metacoding.user.usecase.UserResult;
-import com.metacoding.user.usecase.LoginResult;
-import com.metacoding.user.web.dto.LoginRequest;
-import com.metacoding.user.web.dto.UserResponse;
+import com.metacoding.user.usecase.*;
+import com.metacoding.user.web.dto.*;
 import com.metacoding.user.core.util.Resp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

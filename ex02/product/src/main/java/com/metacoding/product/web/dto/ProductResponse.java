@@ -4,8 +4,7 @@ public record ProductResponse(
     int id,
     String productName,
     int quantity,
-    Long price,
-    String status
+    Long price
 ) {
 }
 

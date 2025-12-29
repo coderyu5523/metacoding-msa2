@@ -15,7 +15,6 @@ public class DeliveryService {
     @Transactional
     public DeliveryResult createDelivery(int orderId, String address) {
         Delivery delivery = Delivery.create(orderId, address);
-        delivery.complete();
         Delivery savedDelivery = deliveryRepository.save(delivery);
         return DeliveryResult.from(savedDelivery);
     }

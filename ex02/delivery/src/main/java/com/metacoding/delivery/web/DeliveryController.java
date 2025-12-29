@@ -1,9 +1,7 @@
 package com.metacoding.delivery.web;
 
-import com.metacoding.delivery.usecase.DeliveryService;
-import com.metacoding.delivery.usecase.DeliveryResult;
-import com.metacoding.delivery.web.dto.CreateDeliveryRequest;
-import com.metacoding.delivery.web.dto.DeliveryResponse;
+import com.metacoding.delivery.usecase.*;
+import com.metacoding.delivery.web.dto.*;
 import com.metacoding.delivery.core.util.Resp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +23,6 @@ public class DeliveryController {
             result.id(),
             result.orderId(),
             result.address(),
-            result.status(),
             result.createdAt(),
             result.updatedAt()
         );
@@ -39,7 +36,6 @@ public class DeliveryController {
             result.id(),
             result.orderId(),
             result.address(),
-            result.status(),
             result.createdAt(),
             result.updatedAt()
         );

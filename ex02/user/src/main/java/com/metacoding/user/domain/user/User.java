@@ -16,17 +16,15 @@ public class User {
     private String email;
     private String password;
     private String roles;
-    private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @Builder
-    private User(String username, String email, String password, String roles, String status) {
+    private User(String username, String email, String password, String roles) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.roles = roles;
-        this.status = status;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -38,17 +36,7 @@ public class User {
     }
 
     public static User create(String username, String email, String password) {
-        return new User(username, email, password, "USER", "PENDING");
-    }
-    
-    public void complete() {
-        this.status = "COMPLETED";
-        this.updatedAt = LocalDateTime.now();
-    }
-    
-    public void cancel() {
-        this.status = "CANCELLED";
-        this.updatedAt = LocalDateTime.now();
+        return new User(username, email, password, "USER");
     }
 
     public void validateUsername() {

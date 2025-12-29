@@ -6,7 +6,6 @@ public record DeliveryResponse(
     int id,
     int orderId,
     String address,
-    String status,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {

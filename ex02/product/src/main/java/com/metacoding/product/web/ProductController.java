@@ -1,8 +1,7 @@
 package com.metacoding.product.web;
 
-import com.metacoding.product.usecase.ProductService;
-import com.metacoding.product.usecase.ProductResult;
-import com.metacoding.product.web.dto.ProductResponse;
+import com.metacoding.product.usecase.*;
+import com.metacoding.product.web.dto.*;
 import com.metacoding.product.core.util.Resp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +23,7 @@ public class ProductController {
             result.id(),
             result.productName(),
             result.quantity(),
-            result.price(),
-            result.status()
+            result.price()
         );
         return Resp.ok(response);
     }
@@ -38,8 +36,7 @@ public class ProductController {
                 result.id(),
                 result.productName(),
                 result.quantity(),
-                result.price(),
-                result.status()
+                result.price()
             ))
             .collect(Collectors.toList());
         return Resp.ok(responses);
