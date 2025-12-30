@@ -1,6 +1,5 @@
 package com.metacoding.order.adapter;
 
-import com.metacoding.order.adapter.*;
 import com.metacoding.order.core.util.Resp;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
