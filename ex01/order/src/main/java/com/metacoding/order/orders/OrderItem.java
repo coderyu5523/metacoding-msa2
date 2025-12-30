@@ -27,6 +27,8 @@ public class OrderItem {
         this.quantity = quantity;
         this.price = price;
         this.status = status;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public static OrderItem create(int orderId, int productId, int quantity, Long price) {

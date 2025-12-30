@@ -1,6 +1,7 @@
 package com.metacoding.order.adapter;
 
 import com.metacoding.order.adapter.dto.*;
+import com.metacoding.order.core.util.Resp;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,11 +9,13 @@ import org.springframework.web.bind.annotation.*;
 public interface DeliveryClient {
         
     @PostMapping("/api/deliveries")
-    DeliveryResponse.DTO saveDelivery(@RequestBody DeliveryRequest.SaveDTO request);
+    Resp<DeliveryResponse.DTO> saveDelivery(@RequestBody DeliveryRequest.SaveDTO request);
     
     @GetMapping("/api/deliveries/{id}")
-    DeliveryResponse.DTO getDelivery(@PathVariable("id") int id);
+    Resp<DeliveryResponse.DTO> getDelivery(@PathVariable("id") int id);
     
 }
+
+
 
 

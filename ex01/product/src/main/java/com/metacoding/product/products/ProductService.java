@@ -13,10 +13,9 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductResponse.DTO findById(int id, int quantity) {
+    public ProductResponse.DTO findById(int id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
-        product.checkQuantity(quantity);
         return new ProductResponse.DTO(product);
     }
 
@@ -27,10 +26,12 @@ public class ProductService {
     }
 
     @Transactional
-    public void decreaseQuantity(int productId, int quantity) {
+    public ProductResponse.DTO decreaseQuantity(int productId, int quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
+        product.checkQuantity(product.getQuantity());
         product.decreaseQuantity(quantity);
         productRepository.save(product);
+        return new ProductResponse.DTO(product);
     }
 }

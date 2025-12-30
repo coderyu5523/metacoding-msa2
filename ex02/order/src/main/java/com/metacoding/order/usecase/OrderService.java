@@ -1,7 +1,9 @@
 package com.metacoding.order.usecase;
 
 import com.metacoding.order.domain.order.Order;
+import com.metacoding.order.domain.order.OrderItem;
 import com.metacoding.order.repository.OrderRepository;
+import com.metacoding.order.repository.OrderItemRepository;
 import com.metacoding.order.adapter.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,27 +14,39 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
     private final ProductClient productClient;
     private final DeliveryClient deliveryClient;
 
     @Transactional
     public OrderResult createOrder(int userId, int productId, int quantity) {
-        // 1. 상품 재고 확인 및 감소 
-        productClient.getProduct(productId, quantity);
-
-        // 2. 상품 재고 감소
-        productClient.decreaseQuantity(productId, quantity);
+        // 1. 상품 재고 감소 
+        ProductResponse.DTO product = new ProductResponse.DTO(
+                                        productClient.decreaseQuantity(productId, quantity)
+                                    );
                 
-        // 3. 주문 insert
+        // 2. 주문 생성
         Order order = Order.create(userId, productId, quantity);
+        Order savedOrder = orderRepository.save(order);
+
+        // 3. 주문 아이템 생성 
+        OrderItem orderItem = OrderItem.create(
+            savedOrder.getId(),
+            productId,
+            quantity,
+            product.price()
+        );
+        orderItemRepository.save(orderItem);
 
         // 4. 배달 생성
-        DeliveryRequest.SaveDTO deliveryRequest = new DeliveryRequest.SaveDTO(order.getId(), "ADRESS 4");
+        DeliveryRequest.SaveDTO deliveryRequest = new DeliveryRequest.SaveDTO(savedOrder.getId(), "ADRESS 4");
         deliveryClient.saveDelivery(deliveryRequest);
         
-        // 5. 주문 완료
-        order.complete();
-        Order savedOrder = orderRepository.save(order);
+        // 5. 주문 및 주문 아이템 완료
+        savedOrder.complete();
+        orderItem.complete();
+        orderRepository.save(savedOrder);
+        orderItemRepository.save(orderItem);
 
         return OrderResult.from(savedOrder);
     }
