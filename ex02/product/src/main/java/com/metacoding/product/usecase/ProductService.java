@@ -35,6 +35,14 @@ public class ProductService {
         product.decreaseQuantity(quantity);
         productRepository.save(product);
     }
+
+    @Transactional
+    public void increaseQuantity(int productId, int quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
+        product.increaseQuantity(quantity);
+        productRepository.save(product);
+    }
 }
 
 

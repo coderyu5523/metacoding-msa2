@@ -34,4 +34,13 @@ public class ProductService {
         productRepository.save(product);
         return new ProductResponse.DTO(product);
     }
+
+    @Transactional
+    public ProductResponse.DTO increaseQuantity(int productId, int quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
+        product.increaseQuantity(quantity);
+        productRepository.save(product);
+        return new ProductResponse.DTO(product);
+    }
 }

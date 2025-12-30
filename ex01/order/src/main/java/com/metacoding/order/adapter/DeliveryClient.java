@@ -14,7 +14,11 @@ public interface DeliveryClient {
     @GetMapping("/api/deliveries/{id}")
     Resp<DeliveryResponse.DTO> getDelivery(@PathVariable("id") int id);
     
+    @DeleteMapping("/api/deliveries/order/{orderId}")
+    Resp<Void> cancelDelivery(@PathVariable("orderId") int orderId);
+    
 }
+
 
 
 

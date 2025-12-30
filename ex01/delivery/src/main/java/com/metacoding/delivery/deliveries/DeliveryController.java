@@ -20,4 +20,10 @@ public class DeliveryController {
     public ResponseEntity<?> getDelivery(@PathVariable int id) {
         return Resp.ok(deliveryService.findById(id));
     }
+
+    @DeleteMapping("/order/{orderId}")
+    public ResponseEntity<?> cancelDelivery(@PathVariable int orderId) {
+        deliveryService.cancelDeliveryByOrderId(orderId);
+        return Resp.ok(null);
+    }
 }

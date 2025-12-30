@@ -38,6 +38,13 @@ public class Product {
         this.quantity -= quantity;
     }
 
+    public void increaseQuantity(int quantity) {
+        if (quantity <= 0) {
+            throw new RuntimeException("복구할 수량은 0보다 커야 합니다.");
+        }
+        this.quantity += quantity;
+    }
+
     public void checkQuantity(int quantity) {
         if (this.quantity < quantity) {
             throw new RuntimeException("제품의 수량이 부족합니다.");

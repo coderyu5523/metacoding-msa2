@@ -47,6 +47,12 @@ public class ProductController {
         productService.decreaseQuantity(productId, quantity);
         return Resp.ok(null);
     }
+
+    @PostMapping("/{productId}/increase")
+    public ResponseEntity<?> increaseQuantity(@PathVariable("productId") int productId, @RequestParam int quantity) {
+        productService.increaseQuantity(productId, quantity);
+        return Resp.ok(null);
+    }
 }
 
 

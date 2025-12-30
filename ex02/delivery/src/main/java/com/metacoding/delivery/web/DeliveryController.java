@@ -41,6 +41,12 @@ public class DeliveryController {
         );
         return Resp.ok(response);
     }
+
+    @DeleteMapping("/order/{orderId}")
+    public ResponseEntity<?> cancelDelivery(@PathVariable int orderId) {
+        deliveryService.cancelDeliveryByOrderId(orderId);
+        return Resp.ok(null);
+    }
 }
 
 

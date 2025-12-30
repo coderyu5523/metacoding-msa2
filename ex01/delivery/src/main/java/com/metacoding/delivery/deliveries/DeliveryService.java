@@ -22,4 +22,10 @@ public class DeliveryService {
                 .orElseThrow(() -> new RuntimeException("배달 정보를 조회할 수 없습니다."));
         return new DeliveryResponse.DTO(delivery);
     }
+
+    @Transactional
+    public void cancelDeliveryByOrderId(int orderId) {
+        deliveryRepository.findByOrderId(orderId)
+                .ifPresent(deliveryRepository::delete);
+    }
 }

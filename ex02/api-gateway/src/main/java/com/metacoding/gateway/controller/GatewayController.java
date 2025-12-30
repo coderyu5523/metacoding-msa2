@@ -1,4 +1,4 @@
-package com.metacoding.gateway.adapter;
+package com.metacoding.gateway.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class GatewayController {
             headers.setContentType(MediaType.parseMediaType(contentType));
         }
         
-        // userId를 헤더에 담아서 전달
+        // userId를 헤더에 담아서 각 서버에 전달
         Integer userId = (Integer) request.getAttribute("userId");
         if (userId != null) {
             headers.set("X-User-Id", String.valueOf(userId));
