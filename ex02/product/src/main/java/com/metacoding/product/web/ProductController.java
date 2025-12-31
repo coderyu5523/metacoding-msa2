@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/products")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
@@ -43,13 +43,13 @@ public class ProductController {
     }
 
     @PostMapping("/{productId}/decrease")
-    public ResponseEntity<?> decreaseQuantity(@PathVariable("productId") int productId, @RequestParam int quantity) {
+    public ResponseEntity<?> decreaseQuantity(@PathVariable("productId") int productId, @RequestParam("quantity") int quantity) {
         productService.decreaseQuantity(productId, quantity);
         return Resp.ok(null);
     }
 
     @PostMapping("/{productId}/increase")
-    public ResponseEntity<?> increaseQuantity(@PathVariable("productId") int productId, @RequestParam int quantity) {
+    public ResponseEntity<?> increaseQuantity(@PathVariable("productId") int productId, @RequestParam("quantity") int quantity) {
         productService.increaseQuantity(productId, quantity);
         ProductResult result = productService.findById(productId, 0);
         ProductResponse response = new ProductResponse(

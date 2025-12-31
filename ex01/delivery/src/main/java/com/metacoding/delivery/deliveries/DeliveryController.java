@@ -17,12 +17,12 @@ public class DeliveryController {
     }
 
     @GetMapping("/{deliveryId}")
-    public ResponseEntity<?> getDelivery(@PathVariable int deliveryId) {
+    public ResponseEntity<?> getDelivery(@PathVariable("deliveryId") int deliveryId) {
         return Resp.ok(deliveryService.findById(deliveryId));
     }
 
     @DeleteMapping("/{deliveryId}")
-    public ResponseEntity<?> cancelDelivery(@PathVariable int deliveryId) {
+    public ResponseEntity<?> cancelDelivery(@PathVariable("deliveryId") int deliveryId) {
         deliveryService.cancelDelivery(deliveryId);
         return Resp.ok(null);
     }

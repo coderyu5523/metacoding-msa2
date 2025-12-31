@@ -44,6 +44,12 @@ public class GatewayController {
 
     private ResponseEntity<?> routeRequest(HttpServletRequest request, String serviceType) throws IOException {
         String path = request.getRequestURI();
+        
+        // /api/ 프리픽스 제거
+        if (path.startsWith("/api/")) {
+            path = path.substring(4); // "/api" 제거
+        }
+        
         String queryString = request.getQueryString();
         if (queryString != null && !queryString.isEmpty()) {
             path = path + "?" + queryString;

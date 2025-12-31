@@ -21,7 +21,7 @@ public class UserController {
         return Resp.ok(result.token());
     }
 
-    @GetMapping("/api/users/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<?> getUser(@PathVariable("userId") int userId) {
         UserResult result = userService.findById(userId);
         UserResponse response = new UserResponse(
@@ -32,7 +32,7 @@ public class UserController {
         return Resp.ok(response);
     }
 
-    @GetMapping("/api/users")
+    @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {
         List<UserResult> results = userService.findAll();
         List<UserResponse> responses = results.stream()

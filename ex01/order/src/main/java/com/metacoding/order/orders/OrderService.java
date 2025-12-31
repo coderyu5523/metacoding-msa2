@@ -18,11 +18,13 @@ public class OrderService {
 
     @Transactional
     public OrderResponse.DTO saveOrder(int userId, int productId, int quantity, Long price) {
-
+        // 보상 트랜잭션 실행 시 실행된 작업만 롤백 처리를 위해 변수 선언
         Boolean productDecreased = false;
         Boolean orderCreated = false;
         Boolean orderItemCreated = false;
         Boolean deliveryCreated = false;
+        // 보상 트랜잭션에서 주문 정보 저장을 위해 변수 선언
+        Order savedOrder = null;
 
         try {
             // 1. 상품 재고 감소 
@@ -35,7 +37,7 @@ public class OrderService {
                 productId,
                 quantity
             );
-            orderRepository.save(order);
+            savedOrder = orderRepository.save(order);
             orderCreated = true;
 
             // 3. 주문 아이템 생성 
@@ -54,9 +56,9 @@ public class OrderService {
             deliveryCreated = true;
             
             // 5. 주문 완료
-            order.complete();  // 더티 체킹으로 상태 저장
+            savedOrder.complete();  // 더티 체킹으로 상태 저장
 
-            return new OrderResponse.DTO(order);
+            return new OrderResponse.DTO(savedOrder);
             
         } catch (Exception e) {
             // 보상 트랜잭션 실행
@@ -70,7 +72,7 @@ public class OrderService {
             // 상품 재고 복구
             if (productDecreased == true) {
                 System.out.println("상품 재고 복구");
-                productClient.increaseQuantity(requestDTO.productId(), requestDTO.quantity());
+                productClient.increaseQuantity(productId, quantity);
             }
 
             // 주문 생성 중 오류가 발생하면 자동 롤백

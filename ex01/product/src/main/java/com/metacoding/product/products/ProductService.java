@@ -29,7 +29,6 @@ public class ProductService {
     public ProductResponse.DTO decreaseQuantity(int productId, int quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
-        product.checkQuantity(product.getQuantity());
         product.decreaseQuantity(quantity);
         return new ProductResponse.DTO(product);
     }

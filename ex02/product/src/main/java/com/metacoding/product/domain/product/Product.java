@@ -15,52 +15,33 @@ public class Product {
     private String productName;
     private int quantity;
     private Long price;
-    private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @Builder
-    private Product(String productName, int quantity, Long price, String status) {
+    private Product(String productName, int quantity, Long price) {
         this.productName = productName;
         this.quantity = quantity;
         this.price = price;
-        this.status = status;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
     public static Product create(String productName, int quantity, Long price) {
-        return new Product(productName, quantity, price, "PENDING");
+        return new Product(productName, quantity, price);
     }
     
-    public void complete() {
-        this.status = "COMPLETED";
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public void cancel() {
-        this.status = "CANCELLED";
-        this.updatedAt = LocalDateTime.now();
-    }
-
     public void decreaseQuantity(int quantity) {
         if (this.quantity < quantity) {
             throw new RuntimeException("제품의 수량이 부족합니다.");
         }
         this.quantity -= quantity;
     }
-
     public void increaseQuantity(int quantity) {
         if (quantity <= 0) {
             throw new RuntimeException("복구할 수량은 0보다 커야 합니다.");
         }
         this.quantity += quantity;
-    }
-
-    public void checkQuantity(int quantity) {
-        if (this.quantity < quantity) {
-            throw new RuntimeException("제품의 수량이 부족합니다.");
-        }
     }
 }
 

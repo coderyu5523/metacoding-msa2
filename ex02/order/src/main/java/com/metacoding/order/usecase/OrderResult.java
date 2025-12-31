@@ -1,6 +1,7 @@
 package com.metacoding.order.usecase;
 
 import com.metacoding.order.domain.order.Order;
+import com.metacoding.order.domain.order.OrderStatus;
 import java.time.LocalDateTime;
 
 public record OrderResult(
@@ -8,7 +9,7 @@ public record OrderResult(
     int userId,
     int productId,
     int quantity,
-    String status,
+    OrderStatus status,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {

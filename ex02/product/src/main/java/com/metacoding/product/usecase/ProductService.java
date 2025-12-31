@@ -18,7 +18,6 @@ public class ProductService {
     public ProductResult findById(int productId, int quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
-        product.checkQuantity(quantity);
         return ProductResult.from(product);
     }
 

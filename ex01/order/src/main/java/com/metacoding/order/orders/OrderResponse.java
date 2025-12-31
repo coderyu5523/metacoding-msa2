@@ -8,7 +8,7 @@ public class OrderResponse {
         int userId,
         int productId,
         int quantity,
-        String status,
+        OrderStatus status,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
     ) {

@@ -15,12 +15,13 @@ public class Order {
     private int userId;
     private int productId;
     private int quantity;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @Builder
-    private Order(int userId, int productId, int quantity, String status) {
+    private Order(int userId, int productId, int quantity, OrderStatus status) {
         this.userId = userId;
         this.productId = productId;
         this.quantity = quantity;
@@ -30,16 +31,16 @@ public class Order {
     }
 
     public static Order create(int userId, int productId, int quantity) {
-        return new Order(userId, productId, quantity, "PENDING");
+        return new Order(userId, productId, quantity, OrderStatus.PENDING);
     }
 
     public void complete() {
-        this.status = "COMPLETED";
+        this.status = OrderStatus.COMPLETED;
         this.updatedAt = LocalDateTime.now();
     }
     
     public void cancel() {
-        this.status = "CANCELLED";
+        this.status = OrderStatus.CANCELLED;
         this.updatedAt = LocalDateTime.now();
     }
 }

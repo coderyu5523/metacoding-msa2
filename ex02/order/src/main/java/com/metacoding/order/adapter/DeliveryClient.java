@@ -7,13 +7,10 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(name = "delivery-service", url = "http://delivery-service:8084")
 public interface DeliveryClient {
         
-    @PostMapping("/api/deliveries")
-    Resp<DeliveryResponse.DTO> saveDelivery(@RequestBody DeliveryRequest.SaveDTO request);
+    @PostMapping("/deliveries")
+    void saveDelivery(@RequestBody DeliveryRequest.SaveDTO request);
     
-    @GetMapping("/api/deliveries/{deliveryId}")
-    Resp<DeliveryResponse.DTO> getDelivery(@PathVariable("deliveryId") int deliveryId);
-    
-    @DeleteMapping("/api/deliveries/{deliveryId}")
-    Resp<Void> cancelDelivery(@PathVariable("deliveryId") int deliveryId);
+    @DeleteMapping("/deliveries/{deliveryId}")
+    void cancelDelivery(@PathVariable("deliveryId") int deliveryId);
 }
 

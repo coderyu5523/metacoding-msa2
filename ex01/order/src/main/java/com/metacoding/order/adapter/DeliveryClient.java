@@ -9,13 +9,10 @@ import org.springframework.web.bind.annotation.*;
 public interface DeliveryClient {
         
     @PostMapping("/api/deliveries")
-    Resp<DeliveryResponse.DTO> saveDelivery(@RequestBody DeliveryRequest.SaveDTO request);
-    
-    @GetMapping("/api/deliveries/{deliveryId}")
-    Resp<DeliveryResponse.DTO> getDelivery(@PathVariable("deliveryId") int deliveryId);
+    void saveDelivery(@RequestBody DeliveryRequest.SaveDTO request);
     
     @DeleteMapping("/api/deliveries/{deliveryId}")
-    Resp<Void> cancelDelivery(@PathVariable("deliveryId") int deliveryId);
+    void cancelDelivery(@PathVariable("deliveryId") int deliveryId);
     
 }
 

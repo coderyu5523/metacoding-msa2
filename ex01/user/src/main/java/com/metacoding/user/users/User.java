@@ -29,10 +29,6 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public static User create(String username, String email, String password) {
-        return new User(username, email, password, "USER");
-    }
-
     public void passwordCheck(String password) {
         if (!this.password.equals(password)) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");

@@ -1,5 +1,6 @@
 package com.metacoding.order.web.dto;
 
+import com.metacoding.order.domain.order.OrderStatus;
 import java.time.LocalDateTime;
 
 public record OrderResponse(
@@ -7,7 +8,7 @@ public record OrderResponse(
     int userId,
     int productId,
     int quantity,
-    String status,
+    OrderStatus status,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
