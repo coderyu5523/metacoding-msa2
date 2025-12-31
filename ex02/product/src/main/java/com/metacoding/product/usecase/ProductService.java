@@ -25,7 +25,7 @@ public class ProductService {
     public List<ProductResult> findAll() {
         return productRepository.findAll().stream()
                 .map(ProductResult::from)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -33,7 +33,6 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
         product.decreaseQuantity(quantity);
-        productRepository.save(product);
     }
 
     @Transactional
@@ -41,7 +40,6 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
         product.increaseQuantity(quantity);
-        productRepository.save(product);
     }
 }
 

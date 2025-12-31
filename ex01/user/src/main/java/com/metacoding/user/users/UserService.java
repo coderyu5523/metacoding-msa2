@@ -25,7 +25,7 @@ public class UserService {
         List<User> users = userRepository.findAll();
         return users.stream()
                 .map(UserResponse.DTO::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional

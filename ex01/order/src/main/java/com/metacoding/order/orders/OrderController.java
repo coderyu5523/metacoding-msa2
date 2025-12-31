@@ -13,7 +13,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<?> saveOrder(@RequestBody OrderRequest.SaveDTO requestDTO, @RequestAttribute("userId") Integer userId) {
-        return Resp.ok(orderService.saveOrder(userId, requestDTO));
+        return Resp.ok(orderService.saveOrder(userId, requestDTO.productId(), requestDTO.quantity(), requestDTO.price()));
     }
 
     @GetMapping("/{orderId}")

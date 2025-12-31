@@ -5,8 +5,5 @@ public class UserRequest {
         String username,
         String password
     ) {
-        public LoginDTO(User user) {
-            this(user.getUsername(), user.getPassword());
-        }
     }
 }

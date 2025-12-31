@@ -17,74 +17,65 @@ public class OrderService {
     private final DeliveryClient deliveryClient;
 
     @Transactional
-    public OrderResponse.DTO saveOrder(int userId, OrderRequest.SaveDTO requestDTO) {
-        ProductResponse.DTO product = null;
-        Order savedOrder = null;
-        OrderItem orderItem = null;
-        boolean deliveryCreated = false;
+    public OrderResponse.DTO saveOrder(int userId, int productId, int quantity, Long price) {
+
+        Boolean productDecreased = false;
+        Boolean orderCreated = false;
+        Boolean orderItemCreated = false;
+        Boolean deliveryCreated = false;
 
         try {
             // 1. 상품 재고 감소 
-            product = new ProductResponse.DTO(
-                productClient.decreaseQuantity(requestDTO.productId(), requestDTO.quantity())
-            );
+            productClient.decreaseQuantity(productId, quantity);
+            productDecreased = true;
                     
             // 2. 주문 생성
             Order order = Order.create(
                 userId,
-                requestDTO.productId(),
-                requestDTO.quantity()
+                productId,
+                quantity
             );
-            savedOrder = orderRepository.save(order);
+            orderRepository.save(order);
+            orderCreated = true;
 
             // 3. 주문 아이템 생성 
-            orderItem = OrderItem.create(
-                savedOrder.getId(),
-                requestDTO.productId(),
-                requestDTO.quantity(),
-                product.price()
+            OrderItem orderItem = OrderItem.create(
+                order.getId(),
+                productId,
+                quantity,
+                price
             );
             orderItemRepository.save(orderItem);
+            orderItemCreated = true;
 
             // 4. 배달 생성
-            DeliveryRequest.SaveDTO deliveryRequest = new DeliveryRequest.SaveDTO(savedOrder.getId(), "ADRESS 4");
+            DeliveryRequest.SaveDTO deliveryRequest = new DeliveryRequest.SaveDTO(order.getId(), "Addr 4");
             deliveryClient.saveDelivery(deliveryRequest);
             deliveryCreated = true;
             
-            // 5. 주문 및 주문 아이템 완료
-            savedOrder.complete();
-            orderItem.complete();
-            orderRepository.save(savedOrder);
-            orderItemRepository.save(orderItem);
+            // 5. 주문 완료
+            order.complete();  // 더티 체킹으로 상태 저장
 
-            return new OrderResponse.DTO(savedOrder);
+            return new OrderResponse.DTO(order);
             
         } catch (Exception e) {
             // 보상 트랜잭션 실행
 
             // 배달 취소
-            if (deliveryCreated && savedOrder != null) {
+            if (deliveryCreated == true) {
                 System.out.println("배달 취소");
                 deliveryClient.cancelDelivery(savedOrder.getId());
-            }
-            
-            // 주문 아이템 삭제
-            if (orderItem != null) {
-                System.out.println("주문 아이템 삭제");
-                orderItemRepository.delete(orderItem);
-            }
-            
-            // 주문 취소
-            if (savedOrder != null) {
-                System.out.println("주문 취소");
-                savedOrder.cancel();
-                orderRepository.save(savedOrder);
-            }
+            }      
             
             // 상품 재고 복구
-            if (product != null) {
+            if (productDecreased == true) {
                 System.out.println("상품 재고 복구");
                 productClient.increaseQuantity(requestDTO.productId(), requestDTO.quantity());
+            }
+
+            // 주문 생성 중 오류가 발생하면 자동 롤백
+            if (orderCreated == true || orderItemCreated == true) {
+                System.out.println("자동 롤백");
             }
             
             throw new Exception500("주문 생성 중 오류가 발생했습니다: " + e.getMessage());

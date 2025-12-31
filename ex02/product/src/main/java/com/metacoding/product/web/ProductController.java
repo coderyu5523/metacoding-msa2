@@ -17,7 +17,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/{productId}")
-    public ResponseEntity<?> getProduct(@PathVariable("productId") int productId, @RequestParam int quantity) {
+    public ResponseEntity<?> getProduct(@PathVariable("productId") int productId, @RequestParam("quantity") int quantity) {
         ProductResult result = productService.findById(productId, quantity);
         ProductResponse response = new ProductResponse(
             result.id(),

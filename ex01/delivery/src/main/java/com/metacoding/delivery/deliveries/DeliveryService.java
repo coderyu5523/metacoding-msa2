@@ -13,8 +13,8 @@ public class DeliveryService {
     @Transactional
     public DeliveryResponse.DTO saveDelivery(int orderId, String address) {
         Delivery delivery = Delivery.create(orderId, address);
-        Delivery savedDelivery = deliveryRepository.save(delivery);
-        return new DeliveryResponse.DTO(savedDelivery);
+        deliveryRepository.save(delivery);
+        return new DeliveryResponse.DTO(delivery);
     }
 
     public DeliveryResponse.DTO findById(int deliveryId) {
@@ -25,7 +25,8 @@ public class DeliveryService {
 
     @Transactional
     public void cancelDelivery(int deliveryId) {
-        deliveryRepository.findById(deliveryId)
-                .ifPresent(deliveryRepository::delete);
+        Delivery delivery = deliveryRepository.findById(deliveryId)
+                .orElseThrow(() -> new RuntimeException("배달 정보를 조회할 수 없습니다."));
+        deliveryRepository.delete(delivery);
     }
 }

@@ -30,7 +30,7 @@ public class DeliveryController {
     }
 
     @GetMapping("/{deliveryId}")
-    public ResponseEntity<?> getDelivery(@PathVariable int deliveryId) {
+    public ResponseEntity<?> getDelivery(@PathVariable("deliveryId") int deliveryId) {
         DeliveryResult result = deliveryService.findById(deliveryId);
         DeliveryResponse response = new DeliveryResponse(
             result.id(),
@@ -43,7 +43,7 @@ public class DeliveryController {
     }
 
     @DeleteMapping("/{deliveryId}")
-    public ResponseEntity<?> cancelDelivery(@PathVariable int deliveryId) {
+    public ResponseEntity<?> cancelDelivery(@PathVariable("deliveryId") int deliveryId) {
         deliveryService.cancelDelivery(deliveryId);
         return Resp.ok(null);
     }

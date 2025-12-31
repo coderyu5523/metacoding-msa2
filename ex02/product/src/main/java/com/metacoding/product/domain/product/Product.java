@@ -62,18 +62,6 @@ public class Product {
             throw new RuntimeException("제품의 수량이 부족합니다.");
         }
     }
-
-    public void validateQuantity() {
-        if (quantity < 0) {
-            throw new RuntimeException("재고 수량은 0 이상이어야 합니다.");
-        }
-    }
-
-    public void validatePrice() {
-        if (price == null || price <= 0) {
-            throw new RuntimeException("상품 가격은 0보다 커야 합니다.");
-        }
-    }
 }
 
 

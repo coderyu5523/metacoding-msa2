@@ -41,7 +41,7 @@ public class UserController {
                 result.username(),
                 result.email()
             ))
-            .collect(Collectors.toList());
+            .toList();
         return Resp.ok(responses);
     }
 }

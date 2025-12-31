@@ -15,20 +15,15 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<?> saveOrder(
-            @RequestBody CreateOrderRequest requestDTO,
-            HttpServletRequest request) {
+    public ResponseEntity<?> saveOrder(@RequestBody CreateOrderRequest requestDTO, HttpServletRequest request) {
         // Gateway에서 전달한 userId 사용
         Integer userId = (Integer) request.getAttribute("userId");
         if (userId == null) {
             return ResponseEntity.status(401).body("인증이 필요합니다");
         }
         
-        OrderResult result = orderService.saveOrder(
-            userId,
-            requestDTO.productId(),
-            requestDTO.quantity()
-        );
+        OrderResult result = orderService.saveOrder(userId,requestDTO.productId(),requestDTO.quantity(),requestDTO.price());
+        
         OrderResponse response = new OrderResponse(
             result.id(),
             result.userId(),

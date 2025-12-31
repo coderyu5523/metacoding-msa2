@@ -29,37 +29,14 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public static User create(String username, String email, String password) {
+        return new User(username, email, password, "USER");
+    }
+
     public void passwordCheck(String password) {
         if (!this.password.equals(password)) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
     }
 
-    public static User create(String username, String email, String password) {
-        return new User(username, email, password, "USER");
-    }
-
-    public void validateUsername() {
-        if (username == null || username.trim().isEmpty()) {
-            throw new RuntimeException("사용자명은 필수입니다.");
-        }
-        if (username.length() < 3 || username.length() > 20) {
-            throw new RuntimeException("사용자명은 3자 이상 20자 이하여야 합니다.");
-        }
-    }
-
-    public void validateEmail() {
-        if (email == null || email.trim().isEmpty()) {
-            throw new RuntimeException("이메일은 필수입니다.");
-        }
-    }
-
-    public void validatePassword() {
-        if (password == null || password.trim().isEmpty()) {
-            throw new RuntimeException("비밀번호는 필수입니다.");
-        }
-        if (password.length() < 4) {
-            throw new RuntimeException("비밀번호는 4자 이상이어야 합니다.");
-        }
-    }
 }

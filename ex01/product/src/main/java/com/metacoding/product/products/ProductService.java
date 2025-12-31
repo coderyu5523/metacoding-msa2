@@ -22,7 +22,7 @@ public class ProductService {
     public List<ProductResponse.DTO> findAll() {
         return productRepository.findAll().stream()
                 .map(ProductResponse.DTO::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -31,7 +31,6 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
         product.checkQuantity(product.getQuantity());
         product.decreaseQuantity(quantity);
-        productRepository.save(product);
         return new ProductResponse.DTO(product);
     }
 
@@ -40,7 +39,6 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
         product.increaseQuantity(quantity);
-        productRepository.save(product);
         return new ProductResponse.DTO(product);
     }
 }
