@@ -1,7 +1,6 @@
 package com.metacoding.order.usecase;
 
-import com.metacoding.order.domain.order.Order;
-import com.metacoding.order.domain.order.OrderStatus;
+import com.metacoding.order.domain.order.*;
 import java.time.LocalDateTime;
 
 public record OrderResult(

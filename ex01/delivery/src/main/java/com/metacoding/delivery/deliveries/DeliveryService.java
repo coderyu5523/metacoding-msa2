@@ -24,8 +24,8 @@ public class DeliveryService {
     }
 
     @Transactional
-    public void cancelDelivery(int deliveryId) {
-        Delivery delivery = deliveryRepository.findById(deliveryId)
+    public void cancelDelivery(int orderId) {
+        Delivery delivery = deliveryRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new RuntimeException("배달 정보를 조회할 수 없습니다."));
         deliveryRepository.delete(delivery);
     }

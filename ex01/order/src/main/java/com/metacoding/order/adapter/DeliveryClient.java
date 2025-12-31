@@ -11,8 +11,8 @@ public interface DeliveryClient {
     @PostMapping("/api/deliveries")
     void saveDelivery(@RequestBody DeliveryRequest.SaveDTO request);
     
-    @DeleteMapping("/api/deliveries/{deliveryId}")
-    void cancelDelivery(@PathVariable("deliveryId") int deliveryId);
+    @DeleteMapping("/api/deliveries/{orderId}")
+    void cancelDelivery(@PathVariable("orderId") int orderId);
     
 }
 

@@ -21,9 +21,9 @@ public class DeliveryController {
         return Resp.ok(deliveryService.findById(deliveryId));
     }
 
-    @DeleteMapping("/{deliveryId}")
-    public ResponseEntity<?> cancelDelivery(@PathVariable("deliveryId") int deliveryId) {
-        deliveryService.cancelDelivery(deliveryId);
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<?> cancelDelivery(@PathVariable("orderId") int orderId) {
+        deliveryService.cancelDelivery(orderId);
         return Resp.ok(null);
     }
 }

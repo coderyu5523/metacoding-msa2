@@ -12,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class OrderService {
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final ProductClient productClient;
+    private final DeliveryClient deliveryClient;
 
     @Transactional
     public OrderResult saveOrder(int userId, int productId, int quantity, Long price) {
