@@ -18,7 +18,7 @@ public class OrderService {
     private final DeliveryClient deliveryClient;
 
     @Transactional
-    public OrderResult createOrder(int userId, int productId, int quantity) {
+    public OrderResult saveOrder(int userId, int productId, int quantity) {
         ProductResponse.DTO product = null;
         Order savedOrder = null;
         OrderItem orderItem = null;
@@ -57,28 +57,28 @@ public class OrderService {
             return OrderResult.from(savedOrder);
             
         } catch (Exception e) {
-            // 보상 트랜잭션 실행 (역순으로 롤백)
+            // 보상 트랜잭션 실행
 
-            // 4. 배달 취소 (배달이 생성된 경우)
+            // 배달 취소
             if (deliveryCreated && savedOrder != null) {
                 System.out.println("배달 취소");
                 deliveryClient.cancelDelivery(savedOrder.getId());
             }
             
-            // 3. 주문 아이템 삭제
+            // 주문 아이템 삭제
             if (orderItem != null) {
                 System.out.println("주문 아이템 삭제");
                 orderItemRepository.delete(orderItem);
             }
             
-            // 2. 주문 취소
+            // 주문 취소
             if (savedOrder != null) {
                 System.out.println("주문 취소");
                 savedOrder.cancel();
                 orderRepository.save(savedOrder);
             }
             
-            // 1. 상품 재고 복구
+            // 상품 재고 복구
             if (product != null) {
                 System.out.println("상품 재고 복구");
                 productClient.increaseQuantity(productId, quantity);
@@ -88,8 +88,8 @@ public class OrderService {
         }
     }
 
-    public OrderResult findById(int id) {
-        Order order = orderRepository.findById(id)
+    public OrderResult findById(int orderId) {
+        Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("주문을 찾을 수 없습니다."));
         return OrderResult.from(order);
     }

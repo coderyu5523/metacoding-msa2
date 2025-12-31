@@ -24,7 +24,7 @@ public class OrderController {
             return ResponseEntity.status(401).body("인증이 필요합니다");
         }
         
-        OrderResult result = orderService.createOrder(
+        OrderResult result = orderService.saveOrder(
             userId,
             requestDTO.productId(),
             requestDTO.quantity()

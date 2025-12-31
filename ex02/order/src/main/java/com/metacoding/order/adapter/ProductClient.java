@@ -14,7 +14,7 @@ public interface ProductClient {
     Resp<ProductResponse.DTO> decreaseQuantity(@PathVariable("productId") int productId, @RequestParam("quantity") int quantity);
     
     @PostMapping("/api/products/{productId}/increase")
-    void increaseQuantity(@PathVariable("productId") int productId, @RequestParam("quantity") int quantity);
+    Resp<ProductResponse.DTO> increaseQuantity(@PathVariable("productId") int productId, @RequestParam("quantity") int quantity);
 }
 
 

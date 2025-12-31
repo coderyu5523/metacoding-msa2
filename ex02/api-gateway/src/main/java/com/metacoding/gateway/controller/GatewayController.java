@@ -44,6 +44,10 @@ public class GatewayController {
 
     private ResponseEntity<?> routeRequest(HttpServletRequest request, String serviceType) throws IOException {
         String path = request.getRequestURI();
+        String queryString = request.getQueryString();
+        if (queryString != null && !queryString.isEmpty()) {
+            path = path + "?" + queryString;
+        }
         HttpMethod method = HttpMethod.valueOf(request.getMethod());
         
         HttpHeaders headers = new HttpHeaders();
@@ -52,7 +56,7 @@ public class GatewayController {
             headers.setContentType(MediaType.parseMediaType(contentType));
         }
         
-        // userId를 헤더에 담아서 각 서버에 전달
+        // 토큰에서 추출한 userId를 헤더에 담아서 각 서버에 전달
         Integer userId = (Integer) request.getAttribute("userId");
         if (userId != null) {
             headers.set("X-User-Id", String.valueOf(userId));

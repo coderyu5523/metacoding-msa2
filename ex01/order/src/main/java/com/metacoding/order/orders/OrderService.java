@@ -60,28 +60,28 @@ public class OrderService {
             return new OrderResponse.DTO(savedOrder);
             
         } catch (Exception e) {
-            // 보상 트랜잭션 실행 (역순으로 롤백)
+            // 보상 트랜잭션 실행
 
-            // 4. 배달 취소 (배달이 생성된 경우)
+            // 배달 취소
             if (deliveryCreated && savedOrder != null) {
                 System.out.println("배달 취소");
                 deliveryClient.cancelDelivery(savedOrder.getId());
             }
             
-            // 3. 주문 아이템 삭제
+            // 주문 아이템 삭제
             if (orderItem != null) {
                 System.out.println("주문 아이템 삭제");
                 orderItemRepository.delete(orderItem);
             }
             
-            // 2. 주문 취소
+            // 주문 취소
             if (savedOrder != null) {
                 System.out.println("주문 취소");
                 savedOrder.cancel();
                 orderRepository.save(savedOrder);
             }
             
-            // 1. 상품 재고 복구
+            // 상품 재고 복구
             if (product != null) {
                 System.out.println("상품 재고 복구");
                 productClient.increaseQuantity(requestDTO.productId(), requestDTO.quantity());
@@ -91,8 +91,8 @@ public class OrderService {
         }
     }
 
-    public OrderResponse.DTO findById(int id) {
-        Order order = orderRepository.findById(id)
+    public OrderResponse.DTO findById(int orderId) {
+        Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("주문을 찾을 수 없습니다."));
         return new OrderResponse.DTO(order);
     }

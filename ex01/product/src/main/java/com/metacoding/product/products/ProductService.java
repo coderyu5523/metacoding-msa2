@@ -13,8 +13,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductResponse.DTO findById(int id) {
-        Product product = productRepository.findById(id)
+    public ProductResponse.DTO findById(int productId) {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
         return new ProductResponse.DTO(product);
     }

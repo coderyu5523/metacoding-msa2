@@ -16,14 +16,14 @@ public class DeliveryController {
         return Resp.ok(deliveryService.saveDelivery(requestDTO.orderId(), requestDTO.address()));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getDelivery(@PathVariable int id) {
-        return Resp.ok(deliveryService.findById(id));
+    @GetMapping("/{deliveryId}")
+    public ResponseEntity<?> getDelivery(@PathVariable int deliveryId) {
+        return Resp.ok(deliveryService.findById(deliveryId));
     }
 
-    @DeleteMapping("/order/{orderId}")
-    public ResponseEntity<?> cancelDelivery(@PathVariable int orderId) {
-        deliveryService.cancelDeliveryByOrderId(orderId);
+    @DeleteMapping("/{deliveryId}")
+    public ResponseEntity<?> cancelDelivery(@PathVariable int deliveryId) {
+        deliveryService.cancelDelivery(deliveryId);
         return Resp.ok(null);
     }
 }

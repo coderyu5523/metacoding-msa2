@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public ProductResult findById(int id, int quantity) {
-        Product product = productRepository.findById(id)
+    public ProductResult findById(int productId, int quantity) {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
         product.checkQuantity(quantity);
         return ProductResult.from(product);

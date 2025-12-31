@@ -10,10 +10,10 @@ public interface DeliveryClient {
     @PostMapping("/api/deliveries")
     Resp<DeliveryResponse.DTO> saveDelivery(@RequestBody DeliveryRequest.SaveDTO request);
     
-    @GetMapping("/api/deliveries/{id}")
-    Resp<DeliveryResponse.DTO> getDelivery(@PathVariable("id") int id);
+    @GetMapping("/api/deliveries/{deliveryId}")
+    Resp<DeliveryResponse.DTO> getDelivery(@PathVariable("deliveryId") int deliveryId);
     
-    @DeleteMapping("/api/deliveries/order/{orderId}")
-    Resp<Void> cancelDelivery(@PathVariable("orderId") int orderId);
+    @DeleteMapping("/api/deliveries/{deliveryId}")
+    Resp<Void> cancelDelivery(@PathVariable("deliveryId") int deliveryId);
 }
 

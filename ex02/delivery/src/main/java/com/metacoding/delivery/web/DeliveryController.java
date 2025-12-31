@@ -15,7 +15,7 @@ public class DeliveryController {
 
     @PostMapping
     public ResponseEntity<?> saveDelivery(@RequestBody CreateDeliveryRequest requestDTO) {
-        DeliveryResult result = deliveryService.createDelivery(
+        DeliveryResult result = deliveryService.saveDelivery(
             requestDTO.orderId(),
             requestDTO.address()
         );
@@ -29,9 +29,9 @@ public class DeliveryController {
         return Resp.ok(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getDelivery(@PathVariable int id) {
-        DeliveryResult result = deliveryService.findById(id);
+    @GetMapping("/{deliveryId}")
+    public ResponseEntity<?> getDelivery(@PathVariable int deliveryId) {
+        DeliveryResult result = deliveryService.findById(deliveryId);
         DeliveryResponse response = new DeliveryResponse(
             result.id(),
             result.orderId(),
@@ -42,9 +42,9 @@ public class DeliveryController {
         return Resp.ok(response);
     }
 
-    @DeleteMapping("/order/{orderId}")
-    public ResponseEntity<?> cancelDelivery(@PathVariable int orderId) {
-        deliveryService.cancelDeliveryByOrderId(orderId);
+    @DeleteMapping("/{deliveryId}")
+    public ResponseEntity<?> cancelDelivery(@PathVariable int deliveryId) {
+        deliveryService.cancelDelivery(deliveryId);
         return Resp.ok(null);
     }
 }

@@ -17,15 +17,15 @@ public class DeliveryService {
         return new DeliveryResponse.DTO(savedDelivery);
     }
 
-    public DeliveryResponse.DTO findById(int id) {
-        Delivery delivery = deliveryRepository.findById(id)
+    public DeliveryResponse.DTO findById(int deliveryId) {
+        Delivery delivery = deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new RuntimeException("배달 정보를 조회할 수 없습니다."));
         return new DeliveryResponse.DTO(delivery);
     }
 
     @Transactional
-    public void cancelDeliveryByOrderId(int orderId) {
-        deliveryRepository.findByOrderId(orderId)
+    public void cancelDelivery(int deliveryId) {
+        deliveryRepository.findById(deliveryId)
                 .ifPresent(deliveryRepository::delete);
     }
 }

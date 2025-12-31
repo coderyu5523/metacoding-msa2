@@ -13,21 +13,21 @@ public class DeliveryService {
     private final DeliveryRepository deliveryRepository;
 
     @Transactional
-    public DeliveryResult createDelivery(int orderId, String address) {
+    public DeliveryResult saveDelivery(int orderId, String address) {
         Delivery delivery = Delivery.create(orderId, address);
         Delivery savedDelivery = deliveryRepository.save(delivery);
         return DeliveryResult.from(savedDelivery);
     }
 
-    public DeliveryResult findById(int id) {
-        Delivery delivery = deliveryRepository.findById(id)
+    public DeliveryResult findById(int deliveryId) {
+        Delivery delivery = deliveryRepository.findById(deliveryId)
                 .orElseThrow(() -> new RuntimeException("배달 정보를 조회할 수 없습니다."));
         return DeliveryResult.from(delivery);
     }
 
     @Transactional
-    public void cancelDeliveryByOrderId(int orderId) {
-        deliveryRepository.findByOrderId(orderId)
+    public void cancelDelivery(int deliveryId) {
+        deliveryRepository.findById(deliveryId)
                 .ifPresent(deliveryRepository::delete);
     }
 }
