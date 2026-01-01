@@ -3,6 +3,7 @@ package com.metacoding.delivery.deliveries;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.*;
+import com.metacoding.delivery.core.handler.ex.Exception400;
 
 @NoArgsConstructor
 @Getter
@@ -27,5 +28,10 @@ public class Delivery {
 
     public static Delivery create(int orderId, String address) {
         return new Delivery(orderId, address);
+    }
+    public void validateOrderId(int orderId) {
+        if (this.orderId != orderId) {
+            throw new Exception400("주문 ID가 일치하지 않습니다.");
+        }
     }
 }
