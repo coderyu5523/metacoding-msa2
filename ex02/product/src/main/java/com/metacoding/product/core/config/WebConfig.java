@@ -1,21 +1,20 @@
 package com.metacoding.product.core.config;
 
 import com.metacoding.product.core.filter.JwtAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
+import com.metacoding.product.core.util.JwtProvider;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@RequiredArgsConstructor
 public class WebConfig {
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    public FilterRegistrationBean<JwtAuthenticationFilter> jwtFilter() {
+    public FilterRegistrationBean<JwtAuthenticationFilter> jwtFilter(JwtProvider jwtProvider) {
         FilterRegistrationBean<JwtAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(jwtAuthenticationFilter);
-        registrationBean.addUrlPatterns("/api/*");
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtProvider);
+        registrationBean.setFilter(filter);
+        registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(1);
         return registrationBean;
     }
