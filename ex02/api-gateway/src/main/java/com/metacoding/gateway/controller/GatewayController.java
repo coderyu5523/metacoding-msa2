@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
-
 import com.metacoding.gateway.service.GatewayService;
 
 import java.io.IOException;
@@ -45,9 +44,9 @@ public class GatewayController {
     private ResponseEntity<?> routeRequest(HttpServletRequest request, String serviceType) throws IOException {
         String path = request.getRequestURI();
         
-        // /api/ 프리픽스 제거
+        // /api/  제거
         if (path.startsWith("/api/")) {
-            path = path.substring(4); // "/api" 제거
+            path = path.substring(4); 
         }
         
         String queryString = request.getQueryString();

@@ -3,8 +3,7 @@ package com.metacoding.user.core.config;
 import com.metacoding.user.core.filter.JwtAuthenticationFilter;
 import com.metacoding.user.core.util.JwtProvider;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 
 @Configuration
 public class WebConfig {
