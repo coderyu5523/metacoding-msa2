@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -27,7 +26,7 @@ public class UserService {
         List<User> users = userRepository.findAll();
         return users.stream()
             .map(UserResult::from)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Transactional
