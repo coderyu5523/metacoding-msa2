@@ -24,14 +24,14 @@ public class GatewayService {
     @Value("${gateway.services.delivery:http://delivery-service:8080}")
     private String deliveryServiceUrl;
 
-    public ResponseEntity<String> forwardRequest(String serviceType, String path, 
-                                                 HttpMethod method, HttpHeaders headers, 
-                                                 String body) {
+    // 요청 전달
+    public ResponseEntity<String> forwardRequest(String serviceType, String path, HttpMethod method, HttpHeaders headers, String body) {
         String targetUrl = getServiceUrl(serviceType) + path;
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
         return restTemplate.exchange(targetUrl, method, entity, String.class);
     }
 
+    // 서비스 타입에 따라 서비스 URL 반환
     private String getServiceUrl(String serviceType) {
         return switch (serviceType) {
             case "order" -> orderServiceUrl;

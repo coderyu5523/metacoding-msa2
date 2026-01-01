@@ -1,5 +1,6 @@
 package com.metacoding.user.usecase;
 
+import com.metacoding.user.core.handler.ex.Exception404;
 import com.metacoding.user.core.util.JwtUtil;
 import com.metacoding.user.domain.user.User;
 import com.metacoding.user.repository.UserRepository;
@@ -18,7 +19,7 @@ public class UserService {
 
     public UserResult findById(int userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new Exception404("회원 정보를 찾을 수 없습니다."));
         return UserResult.from(user);
     }
 
@@ -32,10 +33,10 @@ public class UserService {
     @Transactional
     public LoginResult login(String username, String password) {
         User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new RuntimeException("유저네임을 찾을 수 없습니다."));
+            .orElseThrow(() -> new Exception404("유저네임을 찾을 수 없습니다."));
         user.passwordCheck(password);
         String token = jwtUtil.create(user.getId(), user.getUsername());
-        return new LoginResult(JwtUtil.TOKEN_PREFIX+token);
+        return TOKEN_PREFIX + token;
     }
 }
 

@@ -32,5 +32,11 @@ public class OrderItem {
     public static OrderItem create(int orderId, int productId, int quantity, Long price) {
         return new OrderItem(orderId, productId, quantity, price);
     }
+
+    public void validatePrice(Long price) {
+        if (this.price != price) {
+            throw new Exception400("가격이 일치하지 않습니다.");
+        }
+    }
 }
 

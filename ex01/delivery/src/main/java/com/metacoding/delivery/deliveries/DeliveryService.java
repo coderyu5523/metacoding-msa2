@@ -1,5 +1,6 @@
 package com.metacoding.delivery.deliveries;
 
+import com.metacoding.delivery.core.handler.ex.Exception404;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +20,14 @@ public class DeliveryService {
 
     public DeliveryResponse.DTO findById(int deliveryId) {
         Delivery delivery = deliveryRepository.findById(deliveryId)
-                .orElseThrow(() -> new RuntimeException("배달 정보를 조회할 수 없습니다."));
+                .orElseThrow(() -> new Exception404("배달 정보를 조회할 수 없습니다."));
         return new DeliveryResponse.DTO(delivery);
     }
 
     @Transactional
     public void cancelDelivery(int orderId) {
         Delivery delivery = deliveryRepository.findByOrderId(orderId)
-                .orElseThrow(() -> new RuntimeException("배달 정보를 조회할 수 없습니다."));
+                .orElseThrow(() -> new Exception404("배달 정보를 조회할 수 없습니다."));
         deliveryRepository.delete(delivery);
     }
 }

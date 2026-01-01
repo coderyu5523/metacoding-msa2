@@ -1,5 +1,6 @@
 package com.metacoding.product.domain.product;
 
+import com.metacoding.product.core.handler.ex.Exception400;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,13 +34,13 @@ public class Product {
     
     public void decreaseQuantity(int quantity) {
         if (this.quantity < quantity) {
-            throw new RuntimeException("제품의 수량이 부족합니다.");
+            throw new Exception400("제품의 수량이 부족합니다.");
         }
         this.quantity -= quantity;
     }
     public void increaseQuantity(int quantity) {
         if (quantity <= 0) {
-            throw new RuntimeException("복구할 수량은 0보다 커야 합니다.");
+            throw new Exception400("복구할 수량은 0보다 커야 합니다.");
         }
         this.quantity += quantity;
     }

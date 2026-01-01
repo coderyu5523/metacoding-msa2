@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -38,7 +37,7 @@ public class ProductController {
                 result.quantity(),
                 result.price()
             ))
-            .collect(Collectors.toList());
+            .toList();
         return Resp.ok(responses);
     }
 

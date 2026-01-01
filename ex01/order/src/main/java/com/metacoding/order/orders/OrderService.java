@@ -2,7 +2,7 @@ package com.metacoding.order.orders;
 
 import com.metacoding.order.adapter.*;
 import com.metacoding.order.adapter.dto.*;
-import com.metacoding.order.core.handler.ex.Exception500;
+import com.metacoding.order.core.handler.ex.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class OrderService {
         Boolean orderCreated = false;
         Boolean orderItemCreated = false;
         Boolean deliveryCreated = false;
-        // 보상 트랜잭션에서 주문 정보 저장을 위해 변수 선언
+        // 보상 트랜잭션에서 사용할 주문 정보를 위한 변수 선언
         Order savedOrder = null;
 
         try {
@@ -47,6 +47,7 @@ public class OrderService {
                 quantity,
                 price
             );
+            orderItem.validatePrice(price);
             orderItemRepository.save(orderItem);
             orderItemCreated = true;
 
@@ -86,7 +87,7 @@ public class OrderService {
 
     public OrderResponse.DTO findById(int orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("주문을 찾을 수 없습니다."));
+                .orElseThrow(() -> new Exception404("주문을 찾을 수 없습니다."));
         return new OrderResponse.DTO(order);
     }
 }

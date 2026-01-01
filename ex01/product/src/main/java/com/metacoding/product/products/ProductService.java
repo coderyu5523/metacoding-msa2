@@ -1,5 +1,6 @@
 package com.metacoding.product.products;
 
+import com.metacoding.product.core.handler.ex.Exception404;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +15,7 @@ public class ProductService {
 
     public ProductResponse.DTO findById(int productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
+                .orElseThrow(() -> new Exception404("상품이 없습니다."));
         return new ProductResponse.DTO(product);
     }
 
@@ -27,7 +28,7 @@ public class ProductService {
     @Transactional
     public ProductResponse.DTO decreaseQuantity(int productId, int quantity) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
+                .orElseThrow(() -> new Exception404("상품이 없습니다."));
         product.decreaseQuantity(quantity);
         return new ProductResponse.DTO(product);
     }
@@ -35,7 +36,7 @@ public class ProductService {
     @Transactional
     public ProductResponse.DTO increaseQuantity(int productId, int quantity) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
+                .orElseThrow(() -> new Exception404("상품이 없습니다."));
         product.increaseQuantity(quantity);
         return new ProductResponse.DTO(product);
     }

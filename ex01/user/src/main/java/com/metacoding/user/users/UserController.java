@@ -12,7 +12,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginDTO requestDTO) {
-        return Resp.ok(userService.login(requestDTO));
+        return Resp.ok(userService.login(requestDTO.username(), requestDTO.password()));
     }
 
     @GetMapping("/api/users/{userId}")

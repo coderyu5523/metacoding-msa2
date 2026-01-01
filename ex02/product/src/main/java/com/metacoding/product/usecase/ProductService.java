@@ -1,5 +1,6 @@
 package com.metacoding.product.usecase;
 
+import com.metacoding.product.core.handler.ex.Exception404;
 import com.metacoding.product.domain.product.Product;
 import com.metacoding.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class ProductService {
 
     public ProductResult findById(int productId, int quantity) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
+                .orElseThrow(() -> new Exception404("상품이 없습니다."));
         return ProductResult.from(product);
     }
 
@@ -29,14 +30,14 @@ public class ProductService {
     @Transactional
     public void decreaseQuantity(int productId, int quantity) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
+                .orElseThrow(() -> new Exception404("상품이 없습니다."));
         product.decreaseQuantity(quantity);
     }
 
     @Transactional
     public void increaseQuantity(int productId, int quantity) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("상품이 없습니다."));
+                .orElseThrow(() -> new Exception404("상품이 없습니다."));
         product.increaseQuantity(quantity);
     }
 }

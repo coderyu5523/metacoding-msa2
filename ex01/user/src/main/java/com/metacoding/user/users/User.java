@@ -1,5 +1,6 @@
 package com.metacoding.user.users;
 
+import com.metacoding.user.core.handler.ex.Exception401;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,10 +29,10 @@ public class User {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
-
+    
     public void passwordCheck(String password) {
         if (!this.password.equals(password)) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new Exception401("비밀번호가 일치하지 않습니다.");
         }
     }
 
