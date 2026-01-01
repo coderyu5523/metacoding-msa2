@@ -42,21 +42,27 @@ public class GatewayController {
     }
 
     private ResponseEntity<?> routeRequest(HttpServletRequest request, String serviceType) throws IOException {
+        // 요청 경로
         String path = request.getRequestURI();
         
-        // /api/  제거
+        // 요청 경로 중 /api/  제거
         if (path.startsWith("/api/")) {
             path = path.substring(4); 
         }
         
+        // 쿼리 스트링 요청이면 그대로 전달
         String queryString = request.getQueryString();
         if (queryString != null && !queryString.isEmpty()) {
             path = path + "?" + queryString;
         }
+        // 요청 http 메서드
         HttpMethod method = HttpMethod.valueOf(request.getMethod());
         
+        // 요청 헤더
         HttpHeaders headers = new HttpHeaders();
+        // 요청 헤더 중 contentType 추출
         String contentType = request.getContentType();
+        // contentType이 있으면 헤더에 담아서 전달
         if (contentType != null) {
             headers.setContentType(MediaType.parseMediaType(contentType));
         }
@@ -66,7 +72,7 @@ public class GatewayController {
         if (userId != null) {
             headers.set("X-User-Id", String.valueOf(userId));
         }
-                
+        // 요청 바디
         String body = request.getContentLength() > 0 
             ? StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8) 
             : null;
