@@ -53,3 +53,20 @@ kubectl get deployments -n metacoding
 
 # Pod 로그 확인
 kubectl logs -n metacoding <pod-name>
+```
+
+### 7. 이미지 리스타트
+
+```bash
+# Deployment 재시작 (권장)
+kubectl rollout restart deployment/gateway-deployment -n metacoding
+kubectl rollout restart deployment/order-deployment -n metacoding
+kubectl rollout restart deployment/product-deployment -n metacoding
+kubectl rollout restart deployment/user-deployment -n metacoding
+kubectl rollout restart deployment/delivery-deployment -n metacoding
+
+# 모든 Deployment 한번에 재시작
+kubectl rollout restart deployment -n metacoding
+
+# 특정 Pod 재시작 (Pod 삭제 시 자동 재생성)
+kubectl delete pod <pod-name> -n metacoding
