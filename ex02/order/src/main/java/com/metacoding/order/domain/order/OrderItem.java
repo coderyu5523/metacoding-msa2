@@ -1,6 +1,7 @@
 package com.metacoding.order.domain.order;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import jakarta.persistence.*;
 import lombok.*;
 import com.metacoding.order.core.handler.ex.Exception400;
@@ -35,7 +36,7 @@ public class OrderItem {
     }
 
     public void validatePrice(Long price) {
-        if (this.price != price) {
+        if (!Objects.equals(this.price, price)) {
             throw new Exception400("가격이 일치하지 않습니다.");
         }
     }

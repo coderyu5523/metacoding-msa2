@@ -70,3 +70,4 @@ echo   kubectl port-forward -n metacoding service/gateway-service 8080:8080
 
 
 
+
