@@ -4,6 +4,7 @@ metadata:
   name: gateway-service
   namespace: metacoding
 spec:
+  type: LoadBalancer  # 외부에 노출
   selector:
     app: gateway
   ports:
