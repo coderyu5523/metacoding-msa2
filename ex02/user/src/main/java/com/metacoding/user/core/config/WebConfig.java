@@ -1,7 +1,6 @@
 package com.metacoding.user.core.config;
 
 import com.metacoding.user.core.filter.JwtAuthenticationFilter;
-import com.metacoding.user.core.util.JwtProvider;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.*;
 
@@ -9,9 +8,9 @@ import org.springframework.context.annotation.*;
 public class WebConfig {
 
     @Bean
-    public FilterRegistrationBean<JwtAuthenticationFilter> jwtFilter(JwtProvider jwtProvider) {
+    public FilterRegistrationBean<JwtAuthenticationFilter> jwtFilter() {
         FilterRegistrationBean<JwtAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtProvider);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter();
         registrationBean.setFilter(filter);
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(1);
