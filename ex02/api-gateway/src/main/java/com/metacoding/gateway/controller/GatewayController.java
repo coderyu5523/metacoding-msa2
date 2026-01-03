@@ -66,10 +66,7 @@ public class GatewayController {
         if (contentType != null) {
             headers.setContentType(MediaType.parseMediaType(contentType));
         }
-        
-        // Gateway를 통한 요청임을 표시하는 헤더 추가
-        headers.set("X-Gateway-Request", "true");
-        
+                
         // 토큰에서 추출한 userId를 헤더에 담아서 각 서버에 전달
         Integer userId = (Integer) request.getAttribute("userId");
         if (userId != null) {
