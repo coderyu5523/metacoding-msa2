@@ -35,7 +35,7 @@ public class OrderItem {
     }
 
     public void validatePrice(Long price) {
-        if (this.price != price) {
+        if (!this.price.equals(price)) {
             throw new Exception400("가격이 일치하지 않습니다.");
         }
     }
