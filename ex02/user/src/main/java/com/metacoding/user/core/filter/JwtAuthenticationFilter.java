@@ -18,7 +18,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String userIdHeader = request.getHeader("X-User-Id");
         
         if (userIdHeader == null || userIdHeader.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "인증이 필요합니다");
             return;
         }
         

@@ -17,34 +17,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, 
                                    HttpServletResponse response, 
                                    FilterChain filterChain) throws ServletException, IOException {
+        // API Gateway는 토큰 인증만 수행 (X-User-Id 헤더 검증 제거)
         String token = jwtProvider.resolveToken(request);
-        Integer userId = null;
         
-        // API 게이트웨이에서 토큰 검증 후 userId 추출해서 각 서버로 전달하기 때문에 API Server만 토큰 추출, 다른 서버는 userId 헤더 사용
-        // 토큰이 있으면 토큰에서 userId 추출
-        if (token != null && jwtProvider.validateToken(token)) {
-            userId = jwtProvider.getUserId(request);
+        if (token == null || !jwtProvider.validateToken(token)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "인증이 필요합니다");
+            return;
         }
         
-        // 토큰이 없거나 유효하지 않으면 X-User-Id 헤더 체크
-        if (userId == null) {
-            String userIdHeader = request.getHeader("X-User-Id");
-            if (userIdHeader != null && !userIdHeader.isEmpty()) {
-                try {
-                    userId = Integer.parseInt(userIdHeader);
-                } catch (NumberFormatException e) {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 사용자 ID입니다");
-                    return;
-                }
-            }
-        }
-        
-        // userId가 있으면 요청 속성에 저장하고 필터 체인 진행
+        Integer userId = jwtProvider.getUserId(request);
         if (userId != null) {
             request.setAttribute("userId", userId);
             filterChain.doFilter(request, response);
         } else {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "인증이 필요합니다");
             return;
         }
     }
