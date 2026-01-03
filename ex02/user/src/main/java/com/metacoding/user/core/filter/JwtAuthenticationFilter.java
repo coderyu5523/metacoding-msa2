@@ -14,6 +14,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, 
                                    HttpServletResponse response, 
                                    FilterChain filterChain) throws ServletException, IOException {
+        // Gateway를 통한 요청인지 확인
+        String gatewayHeader = request.getHeader("X-Gateway-Request");
+        if (gatewayHeader == null || !gatewayHeader.equals("true")) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "비정상적인 요청입니다.");
+            return;
+        }
+        
         // X-User-Id 헤더만 검증 (토큰 인증 제거)
         String userIdHeader = request.getHeader("X-User-Id");
         
