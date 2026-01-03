@@ -15,19 +15,34 @@ public class Delivery {
     private int id;
     private int orderId;
     private String address;
+    
+    @Enumerated(EnumType.STRING)
+    private DeliveryStatus status;
+    
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @Builder
-    private Delivery(int orderId, String address) {
+    private Delivery(int orderId, String address, DeliveryStatus status) {
         this.orderId = orderId;
         this.address = address;
+        this.status = status;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
     public static Delivery create(int orderId, String address) {
-        return new Delivery(orderId, address);
+        return new Delivery(orderId, address, DeliveryStatus.PENDING);
+    }
+    
+    public void complete() {
+        this.status = DeliveryStatus.COMPLETED;
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    public void cancel() {
+        this.status = DeliveryStatus.CANCELLED;
+        this.updatedAt = LocalDateTime.now();
     }
     public void validateOrderId(int orderId) {
         if (this.orderId != orderId) {

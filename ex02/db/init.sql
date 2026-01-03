@@ -42,6 +42,7 @@ CREATE TABLE delivery_tb (
   id INT AUTO_INCREMENT PRIMARY KEY,
   order_id INT,
   address VARCHAR(50),
+  status VARCHAR(50),
   created_at DATETIME,
   updated_at DATETIME
 );
@@ -62,7 +63,7 @@ INSERT INTO order_item_tb (order_id, product_id, quantity, price, created_at, up
 INSERT INTO order_item_tb (order_id, product_id, quantity, price, created_at, updated_at) VALUES (2, 3, 1, 300000, now(), now());
 INSERT INTO order_item_tb (order_id, product_id, quantity, price, created_at, updated_at) VALUES (3, 2, 2, 1300000, now(), now());
 
-INSERT INTO delivery_tb (order_id, address, created_at, updated_at) VALUES (1, 'Addr 1', NOW(), NOW());
-INSERT INTO delivery_tb (order_id, address, created_at, updated_at) VALUES (2, 'Addr 2', NOW(), NOW());
-INSERT INTO delivery_tb (order_id, address, created_at, updated_at) VALUES (3, 'Addr 3', NOW(), NOW());
+INSERT INTO delivery_tb (order_id, address, status, created_at, updated_at) VALUES (1, 'Addr 1', 'COMPLETED', NOW(), NOW());
+INSERT INTO delivery_tb (order_id, address, status, created_at, updated_at) VALUES (2, 'Addr 2', 'COMPLETED', NOW(), NOW());
+INSERT INTO delivery_tb (order_id, address, status, created_at, updated_at) VALUES (3, 'Addr 3', 'COMPLETED', NOW(), NOW());
 

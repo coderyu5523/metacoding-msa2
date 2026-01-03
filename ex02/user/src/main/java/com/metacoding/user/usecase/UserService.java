@@ -7,6 +7,7 @@ import com.metacoding.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import static com.metacoding.user.core.util.JwtUtil.TOKEN_PREFIX;
 
 import java.util.*;
 
@@ -31,7 +32,7 @@ public class UserService {
     }
 
     @Transactional
-    public LoginResult login(String username, String password) {
+    public String login(String username, String password) {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new Exception404("유저네임을 찾을 수 없습니다."));
         user.passwordCheck(password);

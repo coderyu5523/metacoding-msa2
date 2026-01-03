@@ -23,6 +23,7 @@ public class DeliveryController {
             result.id(),
             result.orderId(),
             result.address(),
+            result.status(),
             result.createdAt(),
             result.updatedAt()
         );
@@ -36,6 +37,7 @@ public class DeliveryController {
             result.id(),
             result.orderId(),
             result.address(),
+            result.status(),
             result.createdAt(),
             result.updatedAt()
         );

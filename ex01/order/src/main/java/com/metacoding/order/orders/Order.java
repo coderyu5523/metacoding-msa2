@@ -25,13 +25,13 @@ public class Order {
         this.userId = userId;
         this.productId = productId;
         this.quantity = quantity;
-        this.status = OrderStatus.PENDING;
+        this.status = status;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
     public static Order create(int userId, int productId, int quantity) {
-        return new Order(userId, productId, quantity);
+        return new Order(userId, productId, quantity, OrderStatus.PENDING);
     }
 
     public void complete() {

@@ -3,6 +3,7 @@ package com.metacoding.order.orders;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import lombok.*;
+import com.metacoding.order.core.handler.ex.Exception400;
 
 @NoArgsConstructor
 @Getter

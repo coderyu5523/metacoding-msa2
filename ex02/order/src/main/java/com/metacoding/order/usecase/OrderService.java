@@ -3,6 +3,7 @@ package com.metacoding.order.usecase;
 import com.metacoding.order.domain.order.*;
 import com.metacoding.order.repository.*;
 import com.metacoding.order.adapter.*;
+import com.metacoding.order.adapter.dbo.DeliveryRequest;
 import com.metacoding.order.core.handler.ex.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

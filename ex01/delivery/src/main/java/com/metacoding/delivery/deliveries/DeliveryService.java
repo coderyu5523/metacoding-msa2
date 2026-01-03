@@ -15,6 +15,7 @@ public class DeliveryService {
     public DeliveryResponse.DTO saveDelivery(int orderId, String address) {
         Delivery delivery = Delivery.create(orderId, address);
         deliveryRepository.save(delivery);
+        delivery.complete();
         return new DeliveryResponse.DTO(delivery);
     }
 
@@ -28,6 +29,6 @@ public class DeliveryService {
     public void cancelDelivery(int orderId) {
         Delivery delivery = deliveryRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new Exception404("배달 정보를 조회할 수 없습니다."));
-        deliveryRepository.delete(delivery);
+        delivery.cancel();
     }
 }
