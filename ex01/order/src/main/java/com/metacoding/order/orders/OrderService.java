@@ -17,7 +17,7 @@ public class OrderService {
     private final DeliveryClient deliveryClient;
 
     @Transactional
-    public OrderResponse.DTO saveOrder(int userId, int productId, int quantity, Long price) {
+    public OrderResponse.DTO createOrder(int userId, int productId, int quantity, Long price, String address) {
         // 보상 트랜잭션 실행 시 실행된 작업만 롤백 처리를 위해 변수 선언
         Boolean productDecreased = false;
         Boolean orderCreated = false;
@@ -52,7 +52,7 @@ public class OrderService {
             orderItemCreated = true;
 
             // 4. 배달 생성
-            DeliveryRequest.SaveDTO deliveryRequest = new DeliveryRequest.SaveDTO(order.getId(), "Addr 4");
+            DeliveryRequest.SaveDTO deliveryRequest = new DeliveryRequest.SaveDTO(order.getId(), address);
             deliveryClient.saveDelivery(deliveryRequest);
             deliveryCreated = true;
             
@@ -89,5 +89,28 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new Exception404("주문을 찾을 수 없습니다."));
         return new OrderResponse.DTO(order);
+    }
+
+    @Transactional
+    public OrderResponse.DTO cancelOrder(int orderId) {
+        // 1. 주문 조회
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new Exception404("주문을 찾을 수 없습니다."));
+
+        try {
+            // 3. 배송 취소
+            deliveryClient.cancelDelivery(orderId);
+
+            // 4. 상품 재고 복구
+            productClient.increaseQuantity(order.getProductId(), order.getQuantity());
+
+            // 5. 주문 취소
+            order.cancel();  // 더티 체킹으로 상태 저장
+
+            return new OrderResponse.DTO(order);
+
+        } catch (Exception e) {
+            throw new Exception500("주문 취소 중 오류가 발생했습니다: " + e.getMessage());
+        }
     }
 }

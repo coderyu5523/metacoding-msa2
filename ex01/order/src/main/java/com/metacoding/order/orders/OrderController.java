@@ -13,11 +13,16 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<?> saveOrder(@RequestBody OrderRequest.SaveDTO requestDTO, @RequestAttribute("userId") Integer userId) {
-        return Resp.ok(orderService.saveOrder(userId, requestDTO.productId(), requestDTO.quantity(), requestDTO.price()));
+        return Resp.ok(orderService.createOrder(userId, requestDTO.productId(), requestDTO.quantity(), requestDTO.price(), requestDTO.address()));
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<?> getOrder(@PathVariable("orderId") int orderId) {
         return Resp.ok(orderService.findById(orderId));
+    }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<?> cancelOrder(@PathVariable("orderId") int orderId) {
+        return Resp.ok(orderService.cancelOrder(orderId));
     }
 }

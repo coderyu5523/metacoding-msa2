@@ -4,7 +4,8 @@ public class OrderRequest {
     public record SaveDTO(
         int productId,
         int quantity,
-        Long price
+        Long price,
+        String address
     ) {
     }
 }
