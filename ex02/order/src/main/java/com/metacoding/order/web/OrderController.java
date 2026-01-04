@@ -22,13 +22,13 @@ public class OrderController {
             return ResponseEntity.status(401).body("인증이 필요합니다");
         }
         
-        OrderResponse response = orderService.saveOrder(userId,requestDTO.productId(),requestDTO.quantity(),requestDTO.price());
+        OrderResponse response = orderService.createOrder(userId,requestDTO.productId(),requestDTO.quantity(),requestDTO.price(),requestDTO.address());
         return Resp.ok(response);
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<?> getOrder(@PathVariable("orderId") int orderId) {
-        OrderResponse response = orderService.findById(orderId);
+        OrderResponse response = orderService.getOrder(orderId);
         return Resp.ok(response);
     }
 

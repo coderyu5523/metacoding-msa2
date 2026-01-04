@@ -45,7 +45,6 @@ public class Order {
         if (this.status == OrderStatus.CANCELLED) {
             throw new Exception400("이미 취소된 주문입니다.");
         }
-        
         this.status = OrderStatus.CANCELLED;
         this.updatedAt = LocalDateTime.now();
     }

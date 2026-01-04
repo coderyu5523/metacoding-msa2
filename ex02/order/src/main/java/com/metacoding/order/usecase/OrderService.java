@@ -13,14 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
-public class OrderService {
+public class OrderService implements CreateOrderUseCase, CancelOrderUseCase, GetOrderUseCase {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final ProductClient productClient;
     private final DeliveryClient deliveryClient;
 
+    @Override
     @Transactional
-    public OrderResponse saveOrder(int userId, int productId, int quantity, Long price) {
+    public OrderResponse createOrder(int userId, int productId, int quantity, Long price, String address) {
         // 보상 트랜잭션 실행 시 실행된 작업만 롤백 처리를 위해 변수 선언
         Boolean productDecreased = false;
         Boolean orderCreated = false;
@@ -51,7 +52,7 @@ public class OrderService {
             orderItemCreated = true;
 
             // 4. 배달 생성
-            DeliveryRequest.SaveDTO deliveryRequest = new DeliveryRequest.SaveDTO(order.getId(), "Addr 4");
+            DeliveryRequest.SaveDTO deliveryRequest = new DeliveryRequest.SaveDTO(order.getId(), address);
             deliveryClient.saveDelivery(deliveryRequest);
             deliveryCreated = true;
             
@@ -84,12 +85,14 @@ public class OrderService {
         }
     }
 
-    public OrderResponse findById(int orderId) {
+    @Override
+    public OrderResponse getOrder(int orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new Exception404("주문을 찾을 수 없습니다."));
         return OrderResponse.from(order);
     }
 
+    @Override
     @Transactional
     public OrderResponse cancelOrder(int orderId) {
         // 1. 주문 조회
