@@ -3,8 +3,9 @@ package com.metacoding.order.usecase;
 import com.metacoding.order.domain.order.*;
 import com.metacoding.order.repository.*;
 import com.metacoding.order.adapter.*;
-import com.metacoding.order.adapter.dbo.DeliveryRequest;
+import com.metacoding.order.adapter.dto.DeliveryRequest;
 import com.metacoding.order.core.handler.ex.*;
+import com.metacoding.order.web.dto.OrderResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ public class OrderService {
     private final DeliveryClient deliveryClient;
 
     @Transactional
-    public OrderResult saveOrder(int userId, int productId, int quantity, Long price) {
+    public OrderResponse saveOrder(int userId, int productId, int quantity, Long price) {
         // 보상 트랜잭션 실행 시 실행된 작업만 롤백 처리를 위해 변수 선언
         Boolean productDecreased = false;
         Boolean orderCreated = false;
@@ -57,7 +58,7 @@ public class OrderService {
             // 5. 주문 완료
             savedOrder.complete();  // 더티 체킹으로 상태 저장
 
-            return OrderResult.from(savedOrder);
+            return OrderResponse.from(savedOrder);
             
         } catch (Exception e) {
             // 보상 트랜잭션 실행
@@ -83,10 +84,33 @@ public class OrderService {
         }
     }
 
-    public OrderResult findById(int orderId) {
+    public OrderResponse findById(int orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new Exception404("주문을 찾을 수 없습니다."));
-        return OrderResult.from(order);
+        return OrderResponse.from(order);
+    }
+
+    @Transactional
+    public OrderResponse cancelOrder(int orderId) {
+        // 1. 주문 조회
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new Exception404("주문을 찾을 수 없습니다."));
+
+        try {
+            // 3. 배송 취소
+            deliveryClient.cancelDelivery(orderId);
+
+            // 4. 상품 재고 복구
+            productClient.increaseQuantity(order.getProductId(), order.getQuantity());
+
+            // 5. 주문 취소
+            order.cancel();  // 더티 체킹으로 상태 저장
+
+            return OrderResponse.from(order);
+
+        } catch (Exception e) {
+            throw new Exception500("주문 취소 중 오류가 발생했습니다: " + e.getMessage());
+        }
     }
 }
 

@@ -22,32 +22,19 @@ public class OrderController {
             return ResponseEntity.status(401).body("인증이 필요합니다");
         }
         
-        OrderResult result = orderService.saveOrder(userId,requestDTO.productId(),requestDTO.quantity(),requestDTO.price());
-        
-        OrderResponse response = new OrderResponse(
-            result.id(),
-            result.userId(),
-            result.productId(),
-            result.quantity(),
-            result.status(),
-            result.createdAt(),
-            result.updatedAt()
-        );
+        OrderResponse response = orderService.saveOrder(userId,requestDTO.productId(),requestDTO.quantity(),requestDTO.price());
         return Resp.ok(response);
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<?> getOrder(@PathVariable("orderId") int orderId) {
-        OrderResult result = orderService.findById(orderId);
-        OrderResponse response = new OrderResponse(
-            result.id(),
-            result.userId(),
-            result.productId(),
-            result.quantity(),
-            result.status(),
-            result.createdAt(),
-            result.updatedAt()
-        );
+        OrderResponse response = orderService.findById(orderId);
+        return Resp.ok(response);
+    }
+
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<?> cancelOrder(@PathVariable("orderId") int orderId) {
+        OrderResponse response = orderService.cancelOrder(orderId);
         return Resp.ok(response);
     }
 }
