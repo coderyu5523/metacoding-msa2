@@ -20,11 +20,13 @@ public class OrderOrchestrator {
     // OrderCreated 이벤트 수신
     @KafkaListener(topics = "order-created", groupId = "orchestrator-service")
     public void handleOrderCreated(OrderCreated event) {
-        System.out.println("[Orchestrator] OrderCreated 이벤트 수신: orderId=" + event.getOrderId());
         int orderId = event.getOrderId();
         
         // 워크플로우 상태 초기화 (주소 정보 포함)
-        workflowStates.put(orderId, new WorkflowState(orderId, event.getAddress()));
+        WorkflowState state = new WorkflowState(event.getAddress());
+        state.setProductId(event.getProductId());
+        state.setQuantity(event.getQuantity());
+        workflowStates.put(orderId, state);
         
         // 1. 상품 차감 명령 발행
         DecreaseProductCommand productCommand = new DecreaseProductCommand(
@@ -33,18 +35,16 @@ public class OrderOrchestrator {
             event.getQuantity()
         );
         kafkaTemplate.send("decrease-product-command", productCommand);
-        System.out.println("[Orchestrator] DecreaseProductCommand 발행: orderId=" + orderId);
+        System.out.println("order 이벤트 수신");
     }
     
     // ProductDecreased 이벤트 수신
     @KafkaListener(topics = "product-decreased", groupId = "orchestrator-service")
     public void handleProductDecreased(ProductDecreased event) {
-        System.out.println("[Orchestrator] ProductDecreased 이벤트 수신: orderId=" + event.getOrderId() + ", success=" + event.isSuccess());
         int orderId = event.getOrderId();
         WorkflowState state = workflowStates.get(orderId);
         
         if (state == null) {
-            System.out.println("[Orchestrator] 경고: orderId=" + orderId + "에 대한 WorkflowState를 찾을 수 없습니다.");
             return;
         }
         
@@ -57,11 +57,9 @@ public class OrderOrchestrator {
                 state.getAddress()
             );
             kafkaTemplate.send("create-delivery-command", deliveryCommand);
-            System.out.println("[Orchestrator] CreateDeliveryCommand 발행: orderId=" + orderId);
+            System.out.println("product 이벤트 수신");
         } else {
-            // 상품 차감 실패 시 워크플로우 실패 처리
-            System.out.println("[Orchestrator] 상품 차감 실패: orderId=" + orderId);
-            state.setFailed(true);
+            // 상품 차감 실패 시 워크플로우 실패 처리 (보상 트랜잭션 불필요 - 아직 차감되지 않음)
             workflowStates.remove(orderId);
         }
     }
@@ -69,12 +67,10 @@ public class OrderOrchestrator {
     // DeliveryCreated 이벤트 수신
     @KafkaListener(topics = "delivery-created", groupId = "orchestrator-service")
     public void handleDeliveryCreated(DeliveryCreated event) {
-        System.out.println("[Orchestrator] DeliveryCreated 이벤트 수신: orderId=" + event.getOrderId() + ", success=" + event.isSuccess());
         int orderId = event.getOrderId();
         WorkflowState state = workflowStates.get(orderId);
         
         if (state == null) {
-            System.out.println("[Orchestrator] 경고: orderId=" + orderId + "에 대한 WorkflowState를 찾을 수 없습니다.");
             return;
         }
         
@@ -85,32 +81,37 @@ public class OrderOrchestrator {
             if (state.isProductDecreased() && state.isDeliveryCreated()) {
                 CompleteOrderCommand completeCommand = new CompleteOrderCommand(orderId);
                 kafkaTemplate.send("complete-order-command", completeCommand);
-                System.out.println("[Orchestrator] CompleteOrderCommand 발행: orderId=" + orderId);
                 
                 // 워크플로우 완료
                 workflowStates.remove(orderId);
-                System.out.println("[Orchestrator] 워크플로우 완료: orderId=" + orderId);
-            } else {
-                System.out.println("[Orchestrator] 아직 모든 단계가 완료되지 않음: orderId=" + orderId + ", productDecreased=" + state.isProductDecreased() + ", deliveryCreated=" + state.isDeliveryCreated());
+                System.out.println("order 완료");
             }
         } else {
-            // 배달 생성 실패 시 워크플로우 실패 처리
-            System.out.println("[Orchestrator] 배달 생성 실패: orderId=" + orderId);
-            state.setFailed(true);
+            // 배달 생성 실패 시 보상 트랜잭션 수행
+            // 상품 재고 복구 (이미 차감된 경우)
+            if (state.isProductDecreased()) {
+                IncreaseProductCommand compensateProductCommand = new IncreaseProductCommand(
+                    orderId,
+                    state.getProductId(),
+                    state.getQuantity()
+                );
+                kafkaTemplate.send("increase-product-command", compensateProductCommand);
+                System.out.println("delivery 이벤트 수신 실패, 보상 트랜잭션 시작");
+            }
+            
             workflowStates.remove(orderId);
         }
     }
     
     // 워크플로우 상태 관리 클래스
     private static class WorkflowState {
-        private final int orderId;
         private final String address;
         private boolean productDecreased = false;
         private boolean deliveryCreated = false;
-        private boolean failed = false;
+        private int productId;
+        private int quantity;
         
-        public WorkflowState(int orderId, String address) {
-            this.orderId = orderId;
+        public WorkflowState(String address) {
             this.address = address;
         }
         
@@ -134,12 +135,20 @@ public class OrderOrchestrator {
             this.deliveryCreated = deliveryCreated;
         }
         
-        public boolean isFailed() {
-            return failed;
+        public int getProductId() {
+            return productId;
         }
         
-        public void setFailed(boolean failed) {
-            this.failed = failed;
+        public void setProductId(int productId) {
+            this.productId = productId;
+        }
+        
+        public int getQuantity() {
+            return quantity;
+        }
+        
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
         }
     }
 }

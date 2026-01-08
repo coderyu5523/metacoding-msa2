@@ -1,8 +1,6 @@
 package com.metacoding.orchestrator.message;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
@@ -12,6 +10,7 @@ public class DecreaseProductCommand {
     private int productId;
     private int quantity;
 }
+
 
 
 

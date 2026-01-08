@@ -2,9 +2,8 @@ package com.metacoding.order.usecase;
 
 import com.metacoding.order.domain.order.*;
 import com.metacoding.order.repository.*;
-import com.metacoding.order.adapter.messaging.producer.OrderEventProducer;
-import com.metacoding.order.adapter.messaging.message.OrderCreated;
-import com.metacoding.order.adapter.messaging.message.OrderCancelled;
+import com.metacoding.order.adapter.producer.OrderEventProducer;
+import com.metacoding.order.adapter.message.OrderCreated;
 import com.metacoding.order.core.handler.ex.*;
 import com.metacoding.order.web.dto.OrderResponse;
 import lombok.RequiredArgsConstructor;
@@ -66,14 +65,6 @@ public class OrderService implements CreateOrderUseCase, CancelOrderUseCase, Get
 
         // 2. 주문 취소
         order.cancel();
-
-        // 3. OrderCancelled 이벤트 발행 (보상 트랜잭션을 위해)
-        OrderCancelled event = new OrderCancelled(
-            orderId,
-            order.getProductId(),
-            order.getQuantity()
-        );
-        orderEventProducer.publishOrderCancelled(event);
 
         return OrderResponse.from(order);
     }

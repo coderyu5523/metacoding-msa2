@@ -1,8 +1,6 @@
 package com.metacoding.orchestrator.message;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
@@ -10,6 +8,7 @@ import lombok.NoArgsConstructor;
 public class CompleteOrderCommand {
     private int orderId;
 }
+
 
 
 

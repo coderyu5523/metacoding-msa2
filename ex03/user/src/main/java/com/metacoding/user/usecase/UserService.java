@@ -9,21 +9,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import static com.metacoding.user.core.util.JwtUtil.TOKEN_PREFIX;
 
-import java.util.*;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
-public class UserService {
+public class UserService implements GetUserUseCase, GetUsersUseCase, LoginUseCase {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
+    @Override
     public UserResult findById(int userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new Exception404("회원 정보를 찾을 수 없습니다."));
         return UserResult.from(user);
     }
 
+    @Override
     public List<UserResult> findAll() {
         List<User> users = userRepository.findAll();
         return users.stream()
@@ -31,6 +33,7 @@ public class UserService {
             .toList();
     }
 
+    @Override
     @Transactional
     public String login(String username, String password) {
         User user = userRepository.findByUsername(username)

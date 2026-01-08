@@ -1,8 +1,6 @@
 package com.metacoding.orchestrator.message;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
@@ -15,6 +13,7 @@ public class OrderCreated {
     private Long price;
     private String address;
 }
+
 
 
 
