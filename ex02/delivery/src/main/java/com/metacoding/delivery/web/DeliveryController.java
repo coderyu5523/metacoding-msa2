@@ -15,32 +15,13 @@ public class DeliveryController {
 
     @PostMapping
     public ResponseEntity<?> saveDelivery(@RequestBody CreateDeliveryRequest requestDTO) {
-        DeliveryResult result = deliveryService.saveDelivery(
-            requestDTO.orderId(),
-            requestDTO.address()
-        );
-        DeliveryResponse response = new DeliveryResponse(
-            result.id(),
-            result.orderId(),
-            result.address(),
-            result.status(),
-            result.createdAt(),
-            result.updatedAt()
-        );
+        DeliveryResponse response = deliveryService.saveDelivery(requestDTO.orderId(),requestDTO.address());
         return Resp.ok(response);
     }
 
     @GetMapping("/{deliveryId}")
     public ResponseEntity<?> getDelivery(@PathVariable("deliveryId") int deliveryId) {
-        DeliveryResult result = deliveryService.findById(deliveryId);
-        DeliveryResponse response = new DeliveryResponse(
-            result.id(),
-            result.orderId(),
-            result.address(),
-            result.status(),
-            result.createdAt(),
-            result.updatedAt()
-        );
+        DeliveryResponse response = deliveryService.findById(deliveryId);
         return Resp.ok(response);
     }
 
@@ -50,6 +31,10 @@ public class DeliveryController {
         return Resp.ok(null);
     }
 }
+
+
+
+
 
 
 

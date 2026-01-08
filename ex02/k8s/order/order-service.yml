@@ -4,7 +4,6 @@ metadata:
   name: order-service
   namespace: metacoding
 spec:
-  type: ClusterIP  # 내부 통신만 허용(기본값)
   selector:
     app: order
   ports:

@@ -35,7 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.equals("/login") ||
-               path.startsWith("/h2-console");
+        // 인증 불필요한 경로
+        return path.startsWith("/h2-console") ||
+               path.startsWith("/actuator");
     }
 }

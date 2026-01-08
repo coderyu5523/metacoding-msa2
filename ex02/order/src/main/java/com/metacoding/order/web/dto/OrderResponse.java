@@ -25,16 +25,3 @@ public record OrderResponse(
         );
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
