@@ -9,4 +9,8 @@ spec:
   ports:
     - port: 9092
       targetPort: 9092
+      name: broker
+    - port: 9093
+      targetPort: 9093
+      name: controller
 

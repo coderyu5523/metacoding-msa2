@@ -4,3 +4,5 @@ public interface IncreaseProductUseCase {
     void increaseQuantity(int productId, int quantity);
 }
 
+
+

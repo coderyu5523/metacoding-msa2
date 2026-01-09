@@ -6,3 +6,5 @@ public interface GetProductsUseCase {
     List<ProductResult> findAll();
 }
 
+
+

@@ -4,3 +4,5 @@ public interface GetUserUseCase {
     UserResult findById(int userId);
 }
 
+
+

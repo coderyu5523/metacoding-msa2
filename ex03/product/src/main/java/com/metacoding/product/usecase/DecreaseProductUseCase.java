@@ -4,3 +4,5 @@ public interface DecreaseProductUseCase {
     void decreaseQuantity(int productId, int quantity);
 }
 
+
+

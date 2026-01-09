@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka-deployment
+  name: kafka-deploy
   namespace: metacoding
 spec:
   replicas: 1
@@ -21,7 +21,9 @@ spec:
             - containerPort: 9092 # 클라이언트 통신용 포트 (프로듀서/컨슈머가 연결하는 포트)
             - containerPort: 9093 # 컨트롤러 통신용 포트 (KRaft 모드에서 내부 통신용)
           env:
-            # ===== KRaft 모드 설정 (Zookeeper 없이 실행) =====
+            # ===== KRaft 모드 설정 =====
+            - name: KAFKA_CLUSTER_ID
+              value: "7dca62c8-5716-44af-a036-bef48750587e" # 클러스터 고유 식별자 (UUID)
             - name: KAFKA_NODE_ID
               value: "1" # Kafka 노드의 고유 ID (단일 노드이므로 1)
             - name: KAFKA_PROCESS_ROLES
@@ -38,26 +40,23 @@ spec:
               value: "PLAINTEXT://kafka-service:9092"
               # 클라이언트에게 알려줄 주소 (Kubernetes 서비스 이름 사용)
               # 클라이언트는 이 주소로 연결 시도
-            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT"
-              # 각 리스너의 보안 프로토콜 매핑 (현재는 모두 PLAINTEXT = 암호화 없음)
             - name: KAFKA_INTER_BROKER_LISTENER_NAME
               value: "PLAINTEXT" # 브로커 간 통신에 사용할 리스너 이름
             - name: KAFKA_CONTROLLER_LISTENER_NAMES
               value: "CONTROLLER" # 컨트롤러 리스너 이름 지정
-            # ===== 메타데이터 저장소 (KRaft) =====
-            - name: KAFKA_METADATA_LOG_DIR
-              value: "/var/lib/kafka/metadata"
-              # KRaft 모드에서 메타데이터를 저장할 디렉토리
-              # (Zookeeper 대신 Kafka 자체가 메타데이터 관리)
             # ===== 기타 설정 =====
             - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
               value: "1"
               # 오프셋 토픽의 복제 팩터 (단일 노드이므로 1)
               # 여러 노드가 있으면 3 이상 권장
+            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+              value: "1"
+              # 트랜잭션 상태 로그의 복제 팩터 (단일 노드이므로 1)
+            - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+              value: "1"
+              # 트랜잭션 상태 로그의 최소 ISR (In-Sync Replicas)
             - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
               value: "true"
               # 존재하지 않는 토픽에 메시지를 보내면 자동으로 토픽 생성
               # 개발 환경에 유용, 프로덕션에서는 false 권장
               # 참고: 메타데이터는 컨테이너 내부 파일시스템에 저장됨 (Pod 재시작 시 초기화)
-

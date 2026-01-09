@@ -6,3 +6,5 @@ public interface GetUsersUseCase {
     List<UserResult> findAll();
 }
 
+
+

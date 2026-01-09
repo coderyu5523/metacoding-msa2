@@ -20,7 +20,7 @@ public class ProductCommandConsumer {
     @KafkaListener(topics = "decrease-product-command", groupId = "product-service")
     public void handleDecreaseProductCommand(DecreaseProductCommand command) {
         try {
-            // 상품 차감 처리 (원자적으로)
+            // 상품 차감 처리 
             productService.decreaseQuantity(command.getProductId(), command.getQuantity());
             
             // 성공 이벤트 발행
@@ -59,4 +59,6 @@ public class ProductCommandConsumer {
         }
     }
 }
+
+
 
