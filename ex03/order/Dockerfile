@@ -1,12 +1,5 @@
 FROM gradle:8.5-jdk21
-
-WORKDIR /var/current/app
-
+WORKDIR /app
 COPY . .
-
-RUN sed -i 's/\r$//' gradlew \
- && chmod +x gradlew \
- && ./gradlew clean build -x test \
- && cp build/libs/*.jar application.jar
-
-ENTRYPOINT ["java", "-jar", "application.jar"]
+RUN gradle bootJar -x test
+ENTRYPOINT ["java", "-jar", "build/libs/app.jar"]
