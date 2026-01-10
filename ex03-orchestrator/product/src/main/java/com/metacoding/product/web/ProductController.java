@@ -4,7 +4,7 @@ import com.metacoding.product.usecase.*;
 import com.metacoding.product.web.dto.*;
 import com.metacoding.product.core.util.Resp;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
