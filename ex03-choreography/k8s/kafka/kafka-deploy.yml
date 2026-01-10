@@ -44,6 +44,10 @@ spec:
               value: "PLAINTEXT" # 브로커 간 통신에 사용할 리스너 이름
             - name: KAFKA_CONTROLLER_LISTENER_NAMES
               value: "CONTROLLER" # 컨트롤러 리스너 이름 지정
+            # ====== 메타데이터 저장소 (KRaft) ======
+            - name: KAFKA_METADATA_LOG_DIR
+              value: "/var/lib/kafka/metadata"
+              # KRaft 모드에서 메타데이터를 저장할 디렉토리
             # ===== 기타 설정 =====
             - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
               value: "1"
@@ -59,4 +63,11 @@ spec:
               value: "true"
               # 존재하지 않는 토픽에 메시지를 보내면 자동으로 토픽 생성
               # 개발 환경에 유용, 프로덕션에서는 false 권장
-              # 참고: 메타데이터는 컨테이너 내부 파일시스템에 저장됨 (Pod 재시작 시 초기화)
+          volumeMounts:
+            - name: kafka-metadata-storage
+              mountPath: /var/lib/kafka/metadata
+              # 메타데이터를 PersistentVolume에 저장 (Pod 재시작/삭제 후에도 유지)
+      volumes:
+        - name: kafka-metadata-storage
+          persistentVolumeClaim:
+            claimName: kafka-metadata-pvc
