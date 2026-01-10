@@ -1,8 +1,13 @@
-# ex03 - Kafka 기반 Saga 패턴 구현
+# ex03-choreography - Kafka 기반 Saga 패턴 구현 (Choreography)
 
-ex02를 기반으로 FeignClient 대신 Kafka를 사용한 비동기 Saga 패턴을 구현한 프로젝트입니다.
+ex02를 기반으로 FeignClient 대신 Kafka를 사용한 비동기 Saga 패턴을 **Choreography 방식**으로 구현한 프로젝트입니다.
 
 ## 아키텍처 개요
+
+### Choreography 패턴
+- 중앙 오케스트레이터 없이 각 서비스가 이벤트를 직접 구독하고 처리
+- 서비스 간 느슨한 결합
+- 각 서비스가 자신의 책임에 맞는 이벤트를 구독하고 다음 단계를 진행
 
 ### 이벤트 기반 통신
 - **알림 이벤트 (Notification/Fact)**: 서비스가 자신의 작업을 완료했을 때 발행
@@ -10,12 +15,10 @@ ex02를 기반으로 FeignClient 대신 Kafka를 사용한 비동기 Saga 패턴
   - `ProductDecreased`: 상품이 차감됨
   - `DeliveryCreated`: 배달이 생성됨
 
-- **명령 이벤트 (Command)**: 다른 서비스에게 작업을 요청할 때 발행
-  - `DecreaseProductCommand`: 상품 차감 요청
-  - `CreateDeliveryCommand`: 배달 생성 요청
-  - `CompleteOrderCommand`: 주문 완료 요청
+- **명령 이벤트 (Command)**: 보상 트랜잭션용
+  - `IncreaseProductCommand`: 상품 재고 복구 요청
 
-### Saga 오케스트레이션 흐름
+### Saga Choreography 흐름
 
 ```
 1. Order Service
@@ -23,31 +26,22 @@ ex02를 기반으로 FeignClient 대신 Kafka를 사용한 비동기 Saga 패턴
    - OrderCreated 이벤트 발행
    - 즉시 응답 반환
 
-2. Orchestrator Service (별도 서비스)
-   - OrderCreated 이벤트 수신
-   - DecreaseProductCommand 발행
-
-3. Product Service
-   - DecreaseProductCommand 수신
+2. Product Service
+   - OrderCreated 이벤트 직접 구독
    - 상품 차감 처리 (원자적으로)
    - ProductDecreased 이벤트 발행 (성공/실패)
 
-4. Orchestrator
-   - ProductDecreased 이벤트 수신
-   - 성공 시 CreateDeliveryCommand 발행
-
-5. Delivery Service
-   - CreateDeliveryCommand 수신
-   - 배달 생성 처리
+3. Delivery Service
+   - OrderCreated 이벤트 구독 (주소 정보 저장)
+   - ProductDecreased 이벤트 직접 구독
+   - 성공 시 배달 생성 처리
    - DeliveryCreated 이벤트 발행 (성공/실패)
+   - 실패 시 IncreaseProductCommand 발행 (보상 트랜잭션)
 
-6. Orchestrator
-   - DeliveryCreated 이벤트 수신
-   - 모든 단계 완료 시 CompleteOrderCommand 발행
-
-7. Order Service
-   - CompleteOrderCommand 수신
-   - 주문 상태를 COMPLETED로 변경
+4. Order Service
+   - DeliveryCreated 이벤트 직접 구독
+   - 성공 시 주문 상태를 COMPLETED로 변경
+   - 실패 시 주문 상태를 CANCELLED로 변경
 ```
 
 ## 주요 변경사항
@@ -62,15 +56,13 @@ ex02를 기반으로 FeignClient 대신 Kafka를 사용한 비동기 Saga 패턴
 - Kafka Producer/Consumer 구현
 
 ### 3. 이벤트 모델
-- **Order Service**: `OrderCreated`, `CompleteOrderCommand`
-- **Product Service**: `DecreaseProductCommand`, `ProductDecreased`
-- **Delivery Service**: `CreateDeliveryCommand`, `DeliveryCreated`
+- **Order Service**: `OrderCreated` 발행, `DeliveryCreated` 구독
+- **Product Service**: `OrderCreated` 구독, `ProductDecreased` 발행, `IncreaseProductCommand` 구독 (보상)
+- **Delivery Service**: `OrderCreated` 구독 (주소 저장), `ProductDecreased` 구독, `DeliveryCreated` 발행, `IncreaseProductCommand` 발행 (보상)
 
-### 4. Orchestrator Service
-- 별도 서비스로 분리된 `Orchestrator` 구현
-- 이벤트 수집 및 상태 관리
-- 조건에 따라 명령 발행
-- 독립적인 확장 및 배포 가능
+### 4. Orchestrator 서비스 제거
+- 중앙 오케스트레이터 없이 각 서비스가 직접 이벤트를 구독하고 처리
+- 서비스 간 직접 통신 없이 이벤트 기반으로 협력
 
 ## 실행 방법
 
@@ -88,9 +80,6 @@ kubectl logs -n metacoding -l app=kafka
 
 ### 2. 애플리케이션 실행
 ```bash
-# Orchestrator Service (먼저 실행)
-cd orchestrator && ./gradlew bootRun
-
 # Order Service
 cd order && ./gradlew bootRun
 
@@ -108,18 +97,17 @@ POST http://localhost:8081/orders
   "userId": 1,
   "productId": 1,
   "quantity": 1,
-  "price": 10000
+  "price": 10000,
+  "address": "서울시 강남구"
 }
 ```
 
 ## Kafka 토픽
 
 - `order-created`: 주문 생성 알림
-- `decrease-product-command`: 상품 차감 명령
 - `product-decreased`: 상품 차감 결과 알림
-- `create-delivery-command`: 배달 생성 명령
 - `delivery-created`: 배달 생성 결과 알림
-- `complete-order-command`: 주문 완료 명령
+- `increase-product-command`: 상품 재고 복구 명령 (보상 트랜잭션)
 
 ## 특징
 
@@ -127,9 +115,27 @@ POST http://localhost:8081/orders
 2. **상태 관리**: Order는 PENDING 상태로 시작, 모든 단계 완료 후 COMPLETED로 변경
 3. **원자적 처리**: 각 서비스는 자신의 DB만 원자적으로 처리
 4. **이벤트 기반**: 서비스 간 느슨한 결합, 확장성 향상
+5. **Choreography 패턴**: 중앙 오케스트레이터 없이 각 서비스가 자율적으로 협력
+
+## Choreography vs Orchestration
+
+### Choreography (현재 구현)
+- ✅ 중앙 집중식 컴포넌트 없음
+- ✅ 서비스 간 느슨한 결합
+- ✅ 단일 장애점 없음
+- ❌ 전체 플로우 추적이 어려움
+- ❌ 복잡한 비즈니스 로직 관리가 어려움
+
+### Orchestration (ex03-orchestrator)
+- ✅ 전체 플로우 가시성과 추적 용이
+- ✅ 복잡한 비즈니스 로직 관리 용이
+- ✅ 트랜잭션 상태 관리 명확
+- ❌ 오케스트레이터가 단일 장애점이 될 수 있음
+- ❌ 추가 컴포넌트 필요
 
 ## 주의사항
 
 - Kafka 서버가 실행되어 있어야 합니다
 - 실패 처리 및 보상 트랜잭션은 기본 구현만 포함되어 있습니다
 - 프로덕션 환경에서는 더 강화된 에러 처리 및 재시도 로직이 필요합니다
+- Delivery 서비스는 OrderCreated 이벤트를 구독하여 주소 정보를 임시 저장합니다
