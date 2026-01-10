@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.converter.JsonMessageConverter;
 import org.springframework.kafka.support.converter.RecordMessageConverter;
 
@@ -40,6 +41,11 @@ public class KafkaConfig {
         // JsonMessageConverter를 사용하여 @KafkaListener 파라미터 타입 자동 추론
         RecordMessageConverter converter = new JsonMessageConverter();
         factory.setRecordMessageConverter(converter);
+        
+        // 토픽이 없어도 Consumer 시작 허용
+        ContainerProperties containerProperties = factory.getContainerProperties();
+        containerProperties.setMissingTopicsFatal(false);
+        
         return factory;
     }
 }
