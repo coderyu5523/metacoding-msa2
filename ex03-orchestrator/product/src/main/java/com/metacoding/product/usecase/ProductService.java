@@ -3,6 +3,7 @@ package com.metacoding.product.usecase;
 import com.metacoding.product.core.handler.ex.Exception404;
 import com.metacoding.product.domain.product.Product;
 import com.metacoding.product.repository.ProductRepository;
+import com.metacoding.product.web.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,16 +17,16 @@ public class ProductService implements GetProductUseCase, GetProductsUseCase, De
     private final ProductRepository productRepository;
 
     @Override
-    public ProductResult findById(int productId, int quantity) {
+    public ProductResponse findById(int productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new Exception404("상품이 없습니다."));
-        return ProductResult.from(product);
+        return ProductResponse.from(product);
     }
 
     @Override
-    public List<ProductResult> findAll() {
+    public List<ProductResponse> findAll() {
         return productRepository.findAll().stream()
-                .map(ProductResult::from)
+                .map(ProductResponse::from)
                 .toList();
     }
 

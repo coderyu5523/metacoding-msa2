@@ -16,28 +16,14 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/{productId}")
-    public ResponseEntity<?> getProduct(@PathVariable("productId") int productId, @RequestParam("quantity") int quantity) {
-        ProductResult result = productService.findById(productId, quantity);
-        ProductResponse response = new ProductResponse(
-            result.id(),
-            result.productName(),
-            result.quantity(),
-            result.price()
-        );
+    public ResponseEntity<?> getProduct(@PathVariable("productId") int productId) {
+        ProductResponse response = productService.findById(productId);
         return Resp.ok(response);
     }
 
     @GetMapping
     public ResponseEntity<?> getProducts() {
-        List<ProductResult> results = productService.findAll();
-        List<ProductResponse> responses = results.stream()
-            .map(result -> new ProductResponse(
-                result.id(),
-                result.productName(),
-                result.quantity(),
-                result.price()
-            ))
-            .toList();
+        List<ProductResponse> responses = productService.findAll();
         return Resp.ok(responses);
     }
 
@@ -50,13 +36,7 @@ public class ProductController {
     @PostMapping("/{productId}/increase")
     public ResponseEntity<?> increaseQuantity(@PathVariable("productId") int productId, @RequestParam("quantity") int quantity) {
         productService.increaseQuantity(productId, quantity);
-        ProductResult result = productService.findById(productId, 0);
-        ProductResponse response = new ProductResponse(
-            result.id(),
-            result.productName(),
-            result.quantity(),
-            result.price()
-        );
+        ProductResponse response = productService.findById(productId);
         return Resp.ok(response);
     }
 }

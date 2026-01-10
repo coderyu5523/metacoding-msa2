@@ -17,7 +17,7 @@ public class ProductService implements GetProductUseCase, GetAllProductsUseCase,
     private final ProductRepository productRepository;
 
     @Override
-    public ProductResponse findById(int productId, int quantity) {
+    public ProductResponse findById(int productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new Exception404("상품이 없습니다."));
         return ProductResponse.from(product);

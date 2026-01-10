@@ -4,6 +4,7 @@ import com.metacoding.user.core.handler.ex.Exception404;
 import com.metacoding.user.core.util.JwtUtil;
 import com.metacoding.user.domain.user.User;
 import com.metacoding.user.repository.UserRepository;
+import com.metacoding.user.web.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,17 +20,17 @@ public class UserService implements GetUserUseCase, GetUsersUseCase, LoginUseCas
     private final JwtUtil jwtUtil;
 
     @Override
-    public UserResult findById(int userId) {
+    public UserResponse findById(int userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new Exception404("회원 정보를 찾을 수 없습니다."));
-        return UserResult.from(user);
+        return UserResponse.from(user);
     }
 
     @Override
-    public List<UserResult> findAll() {
+    public List<UserResponse> findAll() {
         List<User> users = userRepository.findAll();
         return users.stream()
-            .map(UserResult::from)
+            .map(UserResponse::from)
             .toList();
     }
 

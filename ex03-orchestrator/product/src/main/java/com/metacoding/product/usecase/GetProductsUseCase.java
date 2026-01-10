@@ -1,9 +1,11 @@
 package com.metacoding.product.usecase;
 
+import com.metacoding.product.web.dto.ProductResponse;
+
 import java.util.List;
 
 public interface GetProductsUseCase {
-    List<ProductResult> findAll();
+    List<ProductResponse> findAll();
 }
 
 

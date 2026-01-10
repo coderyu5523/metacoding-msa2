@@ -22,8 +22,8 @@ spec:
             - containerPort: 9093 # 컨트롤러 통신용 포트 (KRaft 모드에서 내부 통신용)
           env:
             # ===== KRaft 모드 설정 =====
-            - name: KAFKA_CLUSTER_ID
-              value: "7dca62c8-5716-44af-a036-bef48750587e" # 클러스터 고유 식별자 (UUID)
+            - name: CLUSTER_ID
+              value: "AbijZYk0QOm5p852kOMSIg" # KAFKA용 UUID 
             - name: KAFKA_NODE_ID
               value: "1" # Kafka 노드의 고유 ID (단일 노드이므로 1)
             - name: KAFKA_PROCESS_ROLES

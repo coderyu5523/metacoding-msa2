@@ -1,7 +1,9 @@
 package com.metacoding.product.usecase;
 
+import com.metacoding.product.web.dto.ProductResponse;
+
 public interface GetProductUseCase {
-    ProductResult findById(int productId, int quantity);
+    ProductResponse findById(int productId);
 }
 
 

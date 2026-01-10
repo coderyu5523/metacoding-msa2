@@ -16,6 +16,15 @@ minikube image build -t metacoding/user:1 ./user
 minikube image build -t metacoding/delivery:1 ./delivery
 ```
 
+#### kafka용 UUID 생성
+
+```bash
+kubectl run -n metacoding kafka-uuid --rm -it --restart=Never \
+  --image=confluentinc/cp-kafka:7.5.0 \
+  -- bash -lc "kafka-storage random-uuid"
+```
+
+
 #### 3 네임스페이스 생성
 
 ```bash

@@ -21,25 +21,13 @@ public class UserController {
 
     @GetMapping("/users/{userId}")
     public ResponseEntity<?> getUser(@PathVariable("userId") int userId) {
-        UserResult result = userService.findById(userId);
-        UserResponse response = new UserResponse(
-            result.id(),
-            result.username(),
-            result.email()
-        );
+        UserResponse response = userService.findById(userId);
         return Resp.ok(response);
     }
 
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {
-        List<UserResult> results = userService.findAll();
-        List<UserResponse> responses = results.stream()
-            .map(result -> new UserResponse(
-                result.id(),
-                result.username(),
-                result.email()
-            ))
-            .toList();
+        List<UserResponse> responses = userService.findAll();
         return Resp.ok(responses);
     }
 }

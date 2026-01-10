@@ -1,7 +1,9 @@
 package com.metacoding.user.usecase;
 
+import com.metacoding.user.web.dto.UserResponse;
+
 public interface GetUserUseCase {
-    UserResult findById(int userId);
+    UserResponse findById(int userId);
 }
 
 
