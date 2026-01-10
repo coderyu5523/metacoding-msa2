@@ -40,6 +40,8 @@ public class KafkaConfig {
         // JsonMessageConverter를 사용하여 @KafkaListener 파라미터 타입 자동 추론
         RecordMessageConverter converter = new JsonMessageConverter();
         factory.setRecordMessageConverter(converter);
+        // 토픽이 없어도 Consumer 시작 허용
+        factory.getContainerProperties().setMissingTopicsFatal(false);
         return factory;
     }
 }
