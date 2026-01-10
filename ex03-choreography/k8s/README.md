@@ -14,7 +14,6 @@ minikube image build -t metacoding/order:1 ./order
 minikube image build -t metacoding/product:1 ./product
 minikube image build -t metacoding/user:1 ./user
 minikube image build -t metacoding/delivery:1 ./delivery
-minikube image build -t metacoding/orchestrator:1 ./orchestrator
 ```
 
 #### 3 네임스페이스 생성
@@ -40,7 +39,6 @@ kubectl apply -f k8s/order
 kubectl apply -f k8s/product
 kubectl apply -f k8s/user
 kubectl apply -f k8s/delivery
-kubectl apply -f k8s/orchestrator
 ```
 
 ### 5. 서비스 접근
@@ -74,7 +72,6 @@ kubectl rollout restart deployment/order-deployment -n metacoding
 kubectl rollout restart deployment/product-deployment -n metacoding
 kubectl rollout restart deployment/user-deployment -n metacoding
 kubectl rollout restart deployment/delivery-deployment -n metacoding
-kubectl rollout restart deployment/orchestrator-deploy -n metacoding
 
 # 모든 Deployment 한번에 재시작
 kubectl rollout restart deployment -n metacoding
