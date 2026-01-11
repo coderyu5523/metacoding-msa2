@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
-    private final OrderService orderService;
+    private final CreateOrderUseCase createOrderUseCase;
+    private final GetOrderUseCase getOrderUseCase;
+    private final CancelOrderUseCase cancelOrderUseCase;
 
     @PostMapping
     public ResponseEntity<?> saveOrder(@RequestBody CreateOrderRequest requestDTO, HttpServletRequest request) {
@@ -23,19 +25,19 @@ public class OrderController {
             throw new Exception401("인증이 필요합니다");
         }
         
-        OrderResponse response = orderService.createOrder(userId, requestDTO.productId(), requestDTO.quantity(), requestDTO.price(), requestDTO.address());
+        OrderResponse response = createOrderUseCase.createOrder(userId, requestDTO.productId(), requestDTO.quantity(), requestDTO.price(), requestDTO.address());
         return Resp.ok(response);
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<?> getOrder(@PathVariable("orderId") int orderId) {
-        OrderResponse response = orderService.getOrder(orderId);
+        OrderResponse response = getOrderUseCase.getOrder(orderId);
         return Resp.ok(response);
     }
 
     @DeleteMapping("/{orderId}")
     public ResponseEntity<?> cancelOrder(@PathVariable("orderId") int orderId) {
-        OrderResponse response = orderService.cancelOrder(orderId);
+        OrderResponse response = cancelOrderUseCase.cancelOrder(orderId);
         return Resp.ok(response);
     }
 }

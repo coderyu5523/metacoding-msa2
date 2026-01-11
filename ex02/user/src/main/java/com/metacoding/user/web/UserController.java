@@ -12,22 +12,24 @@ import java.util.*;
 @RequiredArgsConstructor
 @RestController
 public class UserController {
-    private final UserService userService;
+    private final GetUserUseCase getUserUseCase;
+    private final GetAllUsersUseCase getAllUsersUseCase;
+    private final LoginUseCase loginUseCase;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest requestDTO) {
-        return Resp.ok(userService.login(requestDTO.username(), requestDTO.password()));
+        return Resp.ok(loginUseCase.login(requestDTO.username(), requestDTO.password()));
     }
 
     @GetMapping("/users/{userId}")
     public ResponseEntity<?> getUser(@PathVariable("userId") int userId) {
-        UserResponse response = userService.findById(userId);
+        UserResponse response = getUserUseCase.findById(userId);
         return Resp.ok(response);
     }
 
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {
-        List<UserResponse> responses = userService.findAll();
+        List<UserResponse> responses = getAllUsersUseCase.findAll();
         return Resp.ok(responses);
     }
 }

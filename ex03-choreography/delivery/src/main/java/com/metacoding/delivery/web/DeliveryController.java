@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/deliveries")
 public class DeliveryController {
-    private final DeliveryService deliveryService;
+    private final CreateDeliveryUseCase createDeliveryUseCase;
+    private final GetDeliveryUseCase getDeliveryUseCase;
+    private final CancelDeliveryUseCase cancelDeliveryUseCase;
 
     @PostMapping
     public ResponseEntity<?> saveDelivery(@RequestBody CreateDeliveryRequest requestDTO) {
-        DeliveryResponse response = deliveryService.saveDelivery(
+        DeliveryResponse response = createDeliveryUseCase.saveDelivery(
             requestDTO.orderId(),
             requestDTO.address()
         );
@@ -24,13 +26,13 @@ public class DeliveryController {
 
     @GetMapping("/{deliveryId}")
     public ResponseEntity<?> getDelivery(@PathVariable("deliveryId") int deliveryId) {
-        DeliveryResponse response = deliveryService.findById(deliveryId);
+        DeliveryResponse response = getDeliveryUseCase.findById(deliveryId);
         return Resp.ok(response);
     }
 
     @DeleteMapping("/{deliveryId}")
     public ResponseEntity<?> cancelDelivery(@PathVariable("deliveryId") int deliveryId) {
-        deliveryService.cancelDelivery(deliveryId);
+        cancelDeliveryUseCase.cancelDelivery(deliveryId);
         return Resp.ok(null);
     }
 }
