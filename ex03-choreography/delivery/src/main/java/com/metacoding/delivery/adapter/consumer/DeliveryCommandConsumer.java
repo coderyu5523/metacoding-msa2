@@ -26,7 +26,6 @@ public class DeliveryCommandConsumer {
     public void handleOrderCreated(OrderCreated event) {
         // 주문 생성 이벤트에서 주소 정보 저장
         orderAddressMap.put(event.getOrderId(), event.getAddress());
-        System.out.println("delivery: order-created 이벤트 수신, 주소 저장");
     }
     
     @Transactional
@@ -35,14 +34,12 @@ public class DeliveryCommandConsumer {
         if (!event.isSuccess()) {
             // 상품 차감 실패 시 처리할 것이 없음 (주문이 이미 실패)
             orderAddressMap.remove(event.getOrderId());
-            System.out.println("delivery: product-decreased 실패 이벤트 수신");
             return;
         }
         
         // 주소 정보 조회
         String address = orderAddressMap.get(event.getOrderId());
         if (address == null) {
-            System.out.println("delivery: 주소 정보를 찾을 수 없습니다. orderId: " + event.getOrderId());
             return;
         }
         
@@ -58,7 +55,6 @@ public class DeliveryCommandConsumer {
             );
             kafkaTemplate.send("delivery-created", deliveryEvent);
             orderAddressMap.remove(event.getOrderId());
-            System.out.println("delivery 이벤트 생성 성공");
         } catch (Exception e) {
             // 실패 이벤트 발행 및 보상 트랜잭션
             DeliveryCreated deliveryEvent = new DeliveryCreated(
@@ -76,7 +72,6 @@ public class DeliveryCommandConsumer {
             );
             kafkaTemplate.send("increase-product-command", compensateCommand);
             orderAddressMap.remove(event.getOrderId());
-            System.out.println("delivery 이벤트 생성 실패, 보상 트랜잭션 수행");
         }
     }
 }

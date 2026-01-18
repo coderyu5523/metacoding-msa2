@@ -1,6 +1,7 @@
 package com.metacoding.order.adapter.consumer;
 
 import com.metacoding.order.adapter.message.DeliveryCreated;
+import com.metacoding.order.adapter.websocket.OrderWebSocketService;
 import com.metacoding.order.domain.order.Order;
 import com.metacoding.order.repository.OrderRepository;
 import com.metacoding.order.core.handler.ex.Exception404;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderCommandConsumer {
     private final OrderRepository orderRepository;
+    private final OrderWebSocketService webSocketService;
     
     @Transactional
     @KafkaListener(topics = "delivery-created", groupId = "order-service")
@@ -30,7 +32,9 @@ public class OrderCommandConsumer {
         Order order = orderRepository.findById(event.getOrderId())
                 .orElseThrow(() -> new Exception404("주문을 찾을 수 없습니다."));
         order.complete();
-        System.out.println("order 완료 처리");
+        
+        // 웹소켓으로 주문 완료 알림 전송
+        webSocketService.sendOrderCompleted(order.getId(), order.getUserId());
     }
 }
 
