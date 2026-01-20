@@ -53,10 +53,7 @@
     <script>
         let stompClient = null;
         let token = null;
-        // 쿠버네티스용
-        const apiGatewayUrl = 'ws://frontend-service/api/ws/orders';
-        // 로컬용
-        //const apiGatewayUrl = 'ws://localhost:80/api/ws/orders';
+        const apiGatewayUrl = '/api/ws/orders';
 
         // 로그인
         function login() {

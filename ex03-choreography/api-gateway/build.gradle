@@ -6,7 +6,6 @@ plugins {
 
 group = 'com.metacoding'
 version = '0.0.1-SNAPSHOT'
-description = 'Gateway project for Spring Boot'
 
 java {
 	toolchain {
