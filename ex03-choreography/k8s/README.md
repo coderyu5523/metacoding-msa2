@@ -55,6 +55,7 @@ kubectl apply -f k8s/frontend
 ### 5. 서비스 접근
 
 ```bash
+minikube service frontend-service -n metacoding --url
 minikube service gateway-service -n metacoding --url
 ```
 
