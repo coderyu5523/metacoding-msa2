@@ -50,14 +50,30 @@ public class OrderOrchestrator {
         
         if (event.isSuccess()) {
             state.setDeliveryCreated(true);
+            // 배달 생성 후 즉시 주문 완료하지 않고 대기 상태로 유지
+            // 주문 완료는 배달 완료 이벤트에서 처리
+        } else {
+            // 배달 생성 실패 → 보상 트랜잭션
+            compensateProductIfNeeded(state);
+            workflowStates.remove(event.getOrderId());
+        }
+    }
+    
+    @KafkaListener(topics = "delivery-completed", groupId = "orchestrator-service")
+    public void handleDeliveryCompleted(DeliveryCompleted event) {
+        WorkflowState state = getStateOrReturn(event.getOrderId());
+        if (state == null) return;
+        
+        if (event.isSuccess()) {
+            state.setDeliveryCompleted(true);
+            // 배달 완료 시 주문 완료 처리
             if (state.isAllCompleted()) {
                 sendCompleteOrderCommand(event.getOrderId());
                 workflowStates.remove(event.getOrderId());
             }
         } else {
-            // 배달 생성 실패 → 보상 트랜잭션
-            compensateProductIfNeeded(state);
-            workflowStates.remove(event.getOrderId());
+            // 배달 완료 실패 처리 (필요시 로깅 또는 알림)
+            System.out.println("배달 완료 실패: orderId=" + event.getOrderId());
         }
     }
     
@@ -97,6 +113,7 @@ public class OrderOrchestrator {
         private final String address;
         private boolean productDecreased = false;
         private boolean deliveryCreated = false;
+        private boolean deliveryCompleted = false;
         
         public WorkflowState(int orderId, int productId, int quantity, String address) {
             this.orderId = orderId;
@@ -106,7 +123,7 @@ public class OrderOrchestrator {
         }
         
         public boolean isAllCompleted() {
-            return productDecreased && deliveryCreated;
+            return productDecreased && deliveryCreated && deliveryCompleted;
         }
     }
 }
