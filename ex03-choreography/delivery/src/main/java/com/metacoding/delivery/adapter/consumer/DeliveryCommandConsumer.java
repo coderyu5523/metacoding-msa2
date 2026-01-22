@@ -1,9 +1,6 @@
 package com.metacoding.delivery.adapter.consumer;
 
-import com.metacoding.delivery.adapter.message.OrderCreated;
-import com.metacoding.delivery.adapter.message.ProductDecreased;
-import com.metacoding.delivery.adapter.message.DeliveryCreated;
-import com.metacoding.delivery.adapter.message.IncreaseProductCommand;
+import com.metacoding.delivery.adapter.message.*;
 import com.metacoding.delivery.usecase.DeliveryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;

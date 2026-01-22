@@ -6,6 +6,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.StandardCharsets;
+
 @Service
 @RequiredArgsConstructor
 public class GatewayService {
@@ -28,7 +30,20 @@ public class GatewayService {
     public ResponseEntity<String> forwardRequest(String serviceType, String path, HttpMethod method, HttpHeaders headers, String body) {
         String targetUrl = getServiceUrl(serviceType) + path;
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
-        return restTemplate.exchange(targetUrl, method, entity, String.class);
+        //return restTemplate.exchange(targetUrl, method, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(targetUrl, method, entity, String.class);
+        
+        // 헤더 정리: Transfer-Encoding 제거, Content-Length 설정
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.putAll(response.getHeaders());
+        responseHeaders.remove("Transfer-Encoding");
+        
+        // 본문이 있으면 Content-Length 설정
+        String responseBody = response.getBody();
+        if (responseBody != null) {
+            responseHeaders.setContentLength(responseBody.getBytes(StandardCharsets.UTF_8).length);
+        }       
+        return new ResponseEntity<>(responseBody, responseHeaders, response.getStatusCode());
     }
 
     // 서비스 타입에 따라 서비스 URL 반환

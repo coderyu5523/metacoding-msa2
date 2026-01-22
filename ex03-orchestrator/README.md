@@ -1,4 +1,4 @@
-# ex03 - Kafka 기반 Saga 패턴 구현
+# ex04 - Kafka 기반 Saga 패턴 구현 (Orchestration)
 
 ex02를 기반으로 FeignClient 대신 Kafka를 사용한 비동기 Saga 패턴을 구현한 프로젝트입니다.
 

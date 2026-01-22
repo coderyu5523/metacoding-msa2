@@ -1,4 +1,4 @@
-# ex03-choreography - Kafka 기반 Saga 패턴 구현 (Choreography)
+# ex03 - Kafka 기반 Saga 패턴 구현 (Choreography)
 
 ex02를 기반으로 FeignClient 대신 Kafka를 사용한 비동기 Saga 패턴을 **Choreography 방식**으로 구현한 프로젝트입니다.
 
@@ -126,7 +126,7 @@ POST http://localhost:8081/orders
 - ❌ 전체 플로우 추적이 어려움
 - ❌ 복잡한 비즈니스 로직 관리가 어려움
 
-### Orchestration (ex03-orchestrator)
+### Orchestration (ex04)
 - ✅ 전체 플로우 가시성과 추적 용이
 - ✅ 복잡한 비즈니스 로직 관리 용이
 - ✅ 트랜잭션 상태 관리 명확

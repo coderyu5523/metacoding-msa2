@@ -1,8 +1,6 @@
 package com.metacoding.product.adapter.consumer;
 
-import com.metacoding.product.adapter.message.OrderCreated;
-import com.metacoding.product.adapter.message.IncreaseProductCommand;
-import com.metacoding.product.adapter.message.ProductDecreased;
+import com.metacoding.product.adapter.message.*;
 import com.metacoding.product.usecase.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
