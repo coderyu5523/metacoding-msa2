@@ -17,11 +17,11 @@ public class GatewayService {
     @Value("${gateway.services.order:http://order-service:8081}")
     private String orderServiceUrl;
 
-    @Value("${gateway.services.user:http://user-service:8083}")
-    private String userServiceUrl;
-
     @Value("${gateway.services.product:http://product-service:8082}")
     private String productServiceUrl;
+
+    @Value("${gateway.services.user:http://user-service:8083}")
+    private String userServiceUrl;
 
     @Value("${gateway.services.delivery:http://delivery-service:8084}")
     private String deliveryServiceUrl;

@@ -14,18 +14,18 @@ public class GatewayService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${gateway.services.order:http://order-service:8080}")
+    @Value("${gateway.services.order:http://order-service:8081}")
     private String orderServiceUrl;
 
-    @Value("${gateway.services.user:http://user-service:8080}")
-    private String userServiceUrl;
-
-    @Value("${gateway.services.product:http://product-service:8080}")
+    @Value("${gateway.services.product:http://product-service:8082}")
     private String productServiceUrl;
 
-    @Value("${gateway.services.delivery:http://delivery-service:8080}")
-    private String deliveryServiceUrl;
+    @Value("${gateway.services.user:http://user-service:8083}")
+    private String userServiceUrl;
 
+    @Value("${gateway.services.delivery:http://delivery-service:8084}")
+    private String deliveryServiceUrl;
+    
     // 요청 전달
     public ResponseEntity<String> forwardRequest(String serviceType, String path, HttpMethod method, HttpHeaders headers, String body) {
         String targetUrl = getServiceUrl(serviceType) + path;
