@@ -4,5 +4,5 @@ metadata:
   name: orchestrator-configmap
   namespace: metacoding
 data:
-  KAFKA_BOOTSTRAP_SERVERS: kafka-service:9092
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka-service:9092
 
