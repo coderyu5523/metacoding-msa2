@@ -18,6 +18,15 @@ public class WebSocketProxyConfig extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession client) throws Exception {
+        // 세션 attributes에서 userId 가져오기
+        Integer userId = (Integer) client.getAttributes().get("userId");
+        
+        // userId가 없으면 연결 거부
+        if (userId == null) {
+            client.close(CloseStatus.POLICY_VIOLATION.withReason("Authentication required"));
+            return;
+        }
+        
         List<Transport> transports = Arrays.asList(
             new WebSocketTransport(new StandardWebSocketClient()),
             new RestTemplateXhrTransport()
