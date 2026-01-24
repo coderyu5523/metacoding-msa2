@@ -36,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         return path.equals("/login") ||
-               path.startsWith("/h2-console");
+               path.startsWith("/h2-console") ||
+               path.startsWith("/ws/orders");  // WebSocket 경로 제외 (Gateway에서 인증 처리)
     }
 }

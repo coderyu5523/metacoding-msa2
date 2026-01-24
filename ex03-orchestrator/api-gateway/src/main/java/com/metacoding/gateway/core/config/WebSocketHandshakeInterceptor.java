@@ -19,12 +19,21 @@ public class WebSocketHandshakeInterceptor implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
                                    WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        // Authorization 헤더에서 토큰 추출
-        String authHeader = request.getHeaders().getFirst("Authorization");
+        // 쿼리 파라미터에서 토큰 추출 (SockJS는 헤더를 직접 설정할 수 없음)
         String token = null;
-        
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
+        String query = request.getURI().getQuery();
+        if (query != null && query.contains("token=")) {
+            String[] params = query.split("&");
+            for (String param : params) {
+                if (param.startsWith("token=")) {
+                    token = param.substring(6);
+                    // "Bearer " 제거 (있을 경우)
+                    if (token.startsWith("Bearer ")) {
+                        token = token.substring(7);
+                    }
+                    break;
+                }
+            }
         }
         
         // 토큰 검증 및 userId 추출

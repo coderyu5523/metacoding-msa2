@@ -40,6 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         // 인증 불필요한 경로
         return path.equals("/login") ||
-               path.startsWith("/h2-console");
+               path.startsWith("/h2-console") ||
+               path.startsWith("/api/ws/");  // 웹소켓 경로 제외 (WebSocketHandshakeInterceptor에서 처리)
     }
 }
