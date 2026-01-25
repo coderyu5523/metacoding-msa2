@@ -2,10 +2,9 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <title>배달 완료</title>
 </head>
 <body>
-  <h2>배달 완료</h2>
+  <h1>배달기사 화면</h1>
   <input type="number" id="orderId" placeholder="주문 ID" />
   <button onclick="completeDelivery()">배달 완료</button>
   <pre id="log"></pre>
@@ -30,16 +29,15 @@
         });
 
         if (response.ok) {
-          const data = await response.json();
-          println("✓ 배달 완료: " + JSON.stringify(data));
+          println("배달 완료");
           document.getElementById('orderId').value = '';
         } else {
-          println("✗ 실패: " + await response.text());
+          println("실패: " + await response.text());
         }
       } catch (error) {
-        println("✗ 오류: " + error.message);
+        println("오류: " + error.message);
       }
     }
   </script>
-</body>
+</body> 
 </html>
