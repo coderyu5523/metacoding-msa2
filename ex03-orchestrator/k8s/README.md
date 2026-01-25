@@ -8,6 +8,7 @@ minikube start
 
 ```bash
 # 프로젝트 루트에서 실행
+minikube image build -t metacoding/db:1 ./db
 minikube image build -t metacoding/gateway:1 ./api-gateway
 minikube image build -t metacoding/order:1 ./order
 minikube image build -t metacoding/product:1 ./product
@@ -69,7 +70,8 @@ kubectl logs -n metacoding <pod-name>
 ### 7. 이미지 리스타트
 
 ```bash
-# Deployment 재시작 (권장)
+# Deployment 재시작 
+kubectl rollout restart deployment/gateway-deploy -n metacoding
 kubectl rollout restart deployment/gateway-deploy -n metacoding
 kubectl rollout restart deployment/order-deploy -n metacoding
 kubectl rollout restart deployment/product-deploy -n metacoding
