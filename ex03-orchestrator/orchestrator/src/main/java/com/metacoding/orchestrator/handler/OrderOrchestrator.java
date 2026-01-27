@@ -77,7 +77,6 @@ public class OrderOrchestrator {
         }
     }
     
-    // === 헬퍼 메서드 ===
     private WorkflowState getStateOrReturn(int orderId) {
         return workflowStates.get(orderId);
     }
@@ -104,8 +103,9 @@ public class OrderOrchestrator {
         }
     }
     
-    // === 내부 클래스 ===
+    // 상태 관리
     @Data
+    @RequiredArgsConstructor
     private static class WorkflowState {
         private final int orderId;
         private final int productId;
@@ -114,13 +114,6 @@ public class OrderOrchestrator {
         private boolean productDecreased = false;
         private boolean deliveryCreated = false;
         private boolean deliveryCompleted = false;
-        
-        public WorkflowState(int orderId, int productId, int quantity, String address) {
-            this.orderId = orderId;
-            this.productId = productId;
-            this.quantity = quantity;
-            this.address = address;
-        }
         
         public boolean isAllCompleted() {
             return productDecreased && deliveryCreated && deliveryCompleted;
