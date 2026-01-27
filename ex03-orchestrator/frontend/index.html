@@ -7,13 +7,14 @@
 </head>
 <body>
   <h1>고객 화면</h1>
+
   <button onclick="createOrder()">주문하기</button>
-  <pre id="log"></pre>
+
+  <h3 id="status"></h3>
 
   <script>
     const TOKEN = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidXNlcm5hbWUiOiJzc2FyIiwiZXhwIjoxNzY5NDEwMzU4fQ.NkcCFYoQpKfCphOnl1O9qZSM9iDA8ACwsXtZzcPY7Vm6f4GRHnINOS8-0L0tLfF1OlwhdH0VSopfjng7cM3nVQ";
-    const log = document.getElementById('log');
-    const println = (s) => (log.textContent += s + "\n");
+    const status = document.getElementById('status');
     let stomp = null;
 
     async function createOrder() {
@@ -23,7 +24,8 @@
       }
 
       try {
-        println("주문 요청 중...");
+        status.textContent = "주문 요청 중...";
+
         const response = await fetch('/api/orders', {
           method: 'POST',
           headers: {
@@ -33,27 +35,24 @@
           body: JSON.stringify({
             productId: 1,
             quantity: 1,
-            price: 10000,
+            price: 25000,
             address: "Addr 4"
           })
         });
 
         if (response.ok) {
           const data = await response.json();
-          const userId = data.body.userId ;
-          if (userId) {
-            stomp.subscribe(`/topic/orders/${userId}`, (msg) => {
-              const data = JSON.parse(msg.body);
-              println(`주문이 완료되었습니다. (주문번호: ${data.orderId})`);
-            });
-          }
-        } else {
-          println("실패: " + await response.text());
+          const userId = data.body.userId;
+
+          stomp.subscribe(`/topic/orders/${userId}`, (msg) => {
+            const data = JSON.parse(msg.body);
+            status.textContent = `주문이 완료되었습니다. (주문번호: ${data.orderId})`;
+          });
         }
-      } catch (error) {
-        println("오류: " + error.message);
-      }
+    } catch (error) {
+      status.textContent = "오류 발생";
     }
-  </script>
+  }
+</script>
 </body>
 </html>
